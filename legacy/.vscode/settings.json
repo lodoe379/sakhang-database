@@ -1,0 +1,10 @@
+{
+    "go.terminal.activateEnvironment": true,
+    "python.terminal.activateEnvironment": false,
+    "python.useEnvironmentsExtension": true,
+    "remote.extensionKind": {
+        "pub.name": [
+            "ui"
+        ]
+    }
+}

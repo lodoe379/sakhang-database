@@ -1,0 +1,32 @@
+/* CSS for wider landscape forms */
+.login-card.wide-mode {
+    width: 800px;
+    max-width: 95vw;
+    transition: width 0.3s ease;
+}
+
+.landscape-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.landscape-form-grid .form-group {
+    margin-bottom: 0;
+    /* Let grid gap handle spacing */
+}
+
+.landscape-form-grid .full-width {
+    grid-column: span 2;
+}
+
+/* Responsive adjust */
+@media (max-width: 600px) {
+    .landscape-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .landscape-form-grid .full-width {
+        grid-column: span 1;
+    }
+}
