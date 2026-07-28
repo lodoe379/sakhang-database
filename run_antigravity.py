@@ -6,7 +6,7 @@ import os
 def run_app():
     print("Starting Laravel backend...")
     # Using php built-in server as artisan serve was having port issues
-    backend = subprocess.Popen(["php", "-S", "127.0.0.1:8000", "-t", "public"], shell=True)
+    backend = subprocess.Popen(["php", "-c", "php.ini", "-S", "127.0.0.1:8000", "-t", "public"], shell=True)
     
     print("Starting Vite frontend...")
     # Using cmd /c to bypass potential PowerShell execution policy restrictions
