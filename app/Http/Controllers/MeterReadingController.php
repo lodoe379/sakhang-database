@@ -32,9 +32,11 @@ class MeterReadingController extends Controller
         $request->validate([
             'building' => 'required|string',
             'room' => 'required|string',
-            'consumer_id' => 'required|string',
-            'in_id' => 'required|string',
-            'meter_number' => 'required|string',
+            'name_on_bill' => 'nullable|string',
+            'in_id' => 'nullable|string',
+            'meter_number' => 'nullable|string',
+            'consumer_id' => 'nullable|string',
+            'account_no' => 'nullable|string',
             'meter_image' => 'nullable|image|max:10240',
         ]);
 
@@ -46,9 +48,11 @@ class MeterReadingController extends Controller
         MeterReading::create([
             'building' => $request->building,
             'room' => $request->room,
-            'consumer_id' => $request->consumer_id,
+            'name_on_bill' => $request->name_on_bill,
             'in_id' => $request->in_id,
             'meter_number' => $request->meter_number,
+            'consumer_id' => $request->consumer_id,
+            'account_no' => $request->account_no,
             'meter_image' => $imagePath,
         ]);
 
@@ -66,9 +70,11 @@ class MeterReadingController extends Controller
         $request->validate([
             'building' => 'required|string',
             'room' => 'required|string',
-            'consumer_id' => 'required|string',
-            'in_id' => 'required|string',
-            'meter_number' => 'required|string',
+            'name_on_bill' => 'nullable|string',
+            'in_id' => 'nullable|string',
+            'meter_number' => 'nullable|string',
+            'consumer_id' => 'nullable|string',
+            'account_no' => 'nullable|string',
             'meter_image' => 'nullable|image|max:10240',
         ]);
 
@@ -79,9 +85,11 @@ class MeterReadingController extends Controller
         $reading->update([
             'building' => $request->building,
             'room' => $request->room,
-            'consumer_id' => $request->consumer_id,
+            'name_on_bill' => $request->name_on_bill,
             'in_id' => $request->in_id,
             'meter_number' => $request->meter_number,
+            'consumer_id' => $request->consumer_id,
+            'account_no' => $request->account_no,
         ]);
 
         return redirect()->back()->with('success', 'Meter reading updated successfully!');
@@ -123,15 +131,16 @@ class MeterReadingController extends Controller
             foreach ($rows as $index => $row) {
                 if ($index === 0) continue; 
                 
-                // Expecting at least 5 columns: Building, Room, Consumer ID, IN ID, Meter Number
                 if (!isset($row[0])) continue; // Skip empty rows
 
                 MeterReading::create([
                     'building' => $row[0] ?? '',
                     'room' => (string)($row[1] ?? ''),
-                    'consumer_id' => (string)($row[2] ?? ''),
+                    'name_on_bill' => (string)($row[2] ?? ''),
                     'in_id' => (string)($row[3] ?? ''),
                     'meter_number' => (string)($row[4] ?? ''),
+                    'consumer_id' => (string)($row[5] ?? ''),
+                    'account_no' => (string)($row[6] ?? ''),
                     'meter_image' => null, 
                 ]);
                 $count++;

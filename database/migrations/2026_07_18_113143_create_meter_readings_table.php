@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('building');
             $table->string('room');
-            $table->string('consumer_id');
-            $table->string('in_id');
-            $table->string('meter_number');
+            $table->string('name_on_bill')->nullable();
+            $table->string('in_id')->nullable();
+            $table->string('meter_number')->nullable();
+            $table->string('consumer_id')->nullable();
+            $table->string('account_no')->nullable();
             $table->string('meter_image')->nullable();
             $table->timestamps();
         });

@@ -9,9 +9,11 @@ class MeterReading extends Model
     protected $fillable = [
         'building',
         'room',
-        'consumer_id',
+        'name_on_bill',
         'in_id',
         'meter_number',
+        'consumer_id',
+        'account_no',
         'meter_image',
     ];
 }

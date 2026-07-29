@@ -121,20 +121,30 @@
                             <label>Room</label>
                             <input type="text" name="room" class="form-control" required placeholder="e.g. 101">
                         </div>
-                        
+
                         <div class="form-group">
-                            <label>Consumer ID</label>
-                            <input type="text" name="consumer_id" class="form-control" required placeholder="Enter Consumer ID">
+                            <label>Name on the bill</label>
+                            <input type="text" name="name_on_bill" class="form-control" placeholder="Enter Name on the bill">
                         </div>
                         
                         <div class="form-group">
                             <label>IN ID</label>
-                            <input type="text" name="in_id" class="form-control" required placeholder="Enter IN ID">
+                            <input type="text" name="in_id" class="form-control" placeholder="Enter IN ID">
                         </div>
                         
                         <div class="form-group">
                             <label>Meter Number</label>
-                            <input type="text" name="meter_number" class="form-control" required placeholder="Enter Meter Number">
+                            <input type="text" name="meter_number" class="form-control" placeholder="Enter Meter Number">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Consumer ID</label>
+                            <input type="text" name="consumer_id" class="form-control" placeholder="Enter Consumer ID">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Account No</label>
+                            <input type="text" name="account_no" class="form-control" placeholder="Enter Account No">
                         </div>
                         
                         <div class="form-group">
@@ -167,7 +177,7 @@
                 <div style="background: white; border-radius: 20px; padding: 25px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
                         <h3 style="margin: 0; font-size: 18px; color: #1e293b; display: flex; align-items: center; gap: 10px;">
-                            <span>📖</span> Meter Date
+                            <span>📖</span> Meter Data
                         </h3>
                         
                         <div style="display: flex; gap: 15px; align-items: center;">
@@ -184,11 +194,13 @@
                         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
                             <thead>
                                 <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
-                                    <th style="padding: 12px 10px; color: #475569;">Building Name</th>
+                                    <th style="padding: 12px 10px; color: #475569;">Building</th>
                                     <th style="padding: 12px 10px; color: #475569;">Room</th>
-                                    <th style="padding: 12px 10px; color: #475569;">Consumer ID</th>
+                                    <th style="padding: 12px 10px; color: #475569;">Name on the bill</th>
                                     <th style="padding: 12px 10px; color: #475569;">IN ID</th>
-                                    <th style="padding: 12px 10px; color: #475569;">Meter No.</th>
+                                    <th style="padding: 12px 10px; color: #475569;">Meter Number</th>
+                                    <th style="padding: 12px 10px; color: #475569;">Consumer ID</th>
+                                    <th style="padding: 12px 10px; color: #475569;">Account No</th>
                                     <th style="padding: 12px 10px; color: #475569;">Image</th>
                                 </tr>
                             </thead>
@@ -197,9 +209,11 @@
                                 <tr style="border-bottom: 1px solid #e2e8f0; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'" class="data-row" data-id="{{ $reading->id }}">
                                     <td style="padding: 10px;"><strong>{{ $reading->building }}</strong></td>
                                     <td style="padding: 10px;">{{ $reading->room }}</td>
-                                    <td style="padding: 10px;">{{ $reading->consumer_id }}</td>
+                                    <td style="padding: 10px;">{{ $reading->name_on_bill }}</td>
                                     <td style="padding: 10px;">{{ $reading->in_id }}</td>
                                     <td style="padding: 10px;">{{ $reading->meter_number }}</td>
+                                    <td style="padding: 10px;">{{ $reading->consumer_id }}</td>
+                                    <td style="padding: 10px;">{{ $reading->account_no }}</td>
                                     <td style="padding: 10px;">
                                         @if($reading->meter_image)
                                             <a href="{{ asset('storage/' . $reading->meter_image) }}" target="_blank">
@@ -212,7 +226,7 @@
                                 </tr>
                                 @empty
                                 <tr class="empty-row">
-                                    <td colspan="6" style="padding: 20px; text-align: center; color: #64748b;">No meter readings recorded yet.</td>
+                                    <td colspan="8" style="padding: 20px; text-align: center; color: #64748b;">No meter readings recorded yet.</td>
                                 </tr>
                                 @endforelse
                             </tbody>
@@ -237,13 +251,15 @@
                 const id = row.getAttribute('data-id');
                 const cells = row.querySelectorAll('td');
                 
-                if (cells.length >= 5 && id) {
+                if (cells.length >= 7 && id) {
                     hiddenId.value = id;
                     document.querySelector('input[name="building"]').value = cells[0].textContent.trim();
                     document.querySelector('input[name="room"]').value = cells[1].textContent.trim();
-                    document.querySelector('input[name="consumer_id"]').value = cells[2].textContent.trim();
+                    document.querySelector('input[name="name_on_bill"]').value = cells[2].textContent.trim();
                     document.querySelector('input[name="in_id"]').value = cells[3].textContent.trim();
                     document.querySelector('input[name="meter_number"]').value = cells[4].textContent.trim();
+                    document.querySelector('input[name="consumer_id"]').value = cells[5].textContent.trim();
+                    document.querySelector('input[name="account_no"]').value = cells[6].textContent.trim();
                     
                     btnSave.style.display = 'none';
                     btnUpdate.style.display = 'block';
@@ -274,34 +290,32 @@
                     let exactMatchRow = null;
                     
                     rows.forEach(row => {
-                        // Look for exact match in Consumer ID, IN ID, or Meter No.
                         if (filter.length > 0) {
                             const cells = row.querySelectorAll('td');
-                            if (cells.length >= 5) {
-                                const consumerId = cells[2].textContent.trim().toLowerCase();
+                            if (cells.length >= 7) {
+                                const nameOnBill = cells[2].textContent.trim().toLowerCase();
                                 const inId = cells[3].textContent.trim().toLowerCase();
                                 const meterNo = cells[4].textContent.trim().toLowerCase();
+                                const consumerId = cells[5].textContent.trim().toLowerCase();
+                                const accountNo = cells[6].textContent.trim().toLowerCase();
                                 
-                                if (consumerId === filter || inId === filter || meterNo === filter) {
+                                if (nameOnBill === filter || inId === filter || meterNo === filter || consumerId === filter || accountNo === filter) {
                                     exactMatchRow = row;
                                 }
                             }
                         }
                     });
 
-                    // Auto-fill the form if an exact match was found
                     if (exactMatchRow) {
                         enterEditMode(exactMatchRow);
                     }
                 });
             }
 
-            // Auto-fill form on row click
             document.querySelectorAll('#meterTableBody tr.data-row').forEach(row => {
                 row.addEventListener('click', function() {
                     enterEditMode(this);
                     
-                    // Optional visual feedback
                     const originalBg = this.style.background;
                     this.style.background = '#e2e8f0';
                     setTimeout(() => {
