@@ -139,7 +139,7 @@
                                 <select name="building" required>
                                     <option value="" disabled selected>-- Select Building --</option>
                                     @php
-                                        $comp_buildings = config('app_data.buildings', ['Rabten Khang', 'Moenkey Khang', 'Gaden Khang', 'Dekyi Khang', 'Potala Khang', 'Tashi Khang', 'Dharamshala Khang', 'Official', 'Gadhen Khang', 'Phende Khang', 'Delek Delekyi Khang', 'Desung Leyshak', 'Phuntsok Khang', 'Songtsen Khang', 'Health Leyshak', 'Shindhey Khang', 'Thogmoen Khang', 'Sonam Khang', 'Shering Nyiwoe Khang', 'Sunney Hostel', 'Namsey Khang', 'Back of Education', 'Lemon Khang', 'Kalsang Khang', 'Phelgyal Khang', 'Pelbar Khang', 'Nangsi Leyshak', 'Namgyal Khang', 'Shiney Khang', 'Kalon Quat', 'Nelen Khang McLeod']);
+                                        $comp_buildings = config('app_data.buildings');
                                         $comp_buildings = array_unique($comp_buildings);
                                         sort($comp_buildings);
                                     @endphp
@@ -250,7 +250,7 @@
                             <select name="building" required>
                                 <option value="" disabled {{ !isset($search_building) ? 'selected' : '' }}>-- Select Building --</option>
                                 @php
-                                    $buildings = config('app_data.buildings', ['Rabten Khang', 'Moenkey Khang', 'Gaden Khang', 'Dekyi Khang', 'Potala Khang', 'Tashi Khang', 'Dharamshala Khang', 'Official', 'Gadhen Khang', 'Phende Khang', 'Delek Delekyi Khang', 'Desung Leyshak', 'Phuntsok Khang', 'Songtsen Khang', 'Health Leyshak', 'Shindhey Khang', 'Thogmoen Khang', 'Sonam Khang', 'Shering Nyiwoe Khang', 'Sunney Hostel', 'Namsey Khang', 'Back of Education', 'Lemon Khang', 'Kalsang Khang', 'Phelgyal Khang', 'Pelbar Khang', 'Nangsi Leyshak', 'Namgyal Khang', 'Shiney Khang', 'Kalon Quat', 'Nelen Khang McLeod']);
+                                    $buildings = config('app_data.buildings');
                                     $buildings = array_unique($buildings);
                                     sort($buildings);
                                 @endphp
