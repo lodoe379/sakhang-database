@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Shuchkin\SimpleXLSX;
-
+use Illuminate\Support\Str;
 use App\Models\MeterReading;
 
 class MeterReadingController extends Controller
@@ -42,7 +42,7 @@ class MeterReadingController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('meter_image')) {
-            $imagePath = $request->file('meter_image')->store('meters', 'public');
+            $imagePath = $this->saveAsJpg($request->file('meter_image'));
         }
 
         MeterReading::create([
@@ -79,7 +79,7 @@ class MeterReadingController extends Controller
         ]);
 
         if ($request->hasFile('meter_image')) {
-            $reading->meter_image = $request->file('meter_image')->store('meters', 'public');
+            $reading->meter_image = $this->saveAsJpg($request->file('meter_image'));
         }
 
         $reading->update([
@@ -150,5 +150,52 @@ class MeterReadingController extends Controller
         } else {
             return redirect()->back()->withErrors(['excel_file' => 'Failed to parse the Excel file.']);
         }
+    }
+
+    private function saveAsJpg($file)
+    {
+        $filename = \Illuminate\Support\Str::random(40) . '.jpg';
+        $directory = public_path('storage/meters');
+        
+        if (!file_exists($directory)) {
+            mkdir($directory, 0755, true);
+        }
+        
+        $path = $directory . '/' . $filename;
+        $mime = $file->getMimeType();
+        $image = null;
+        
+        switch ($mime) {
+            case 'image/jpeg':
+                $image = @imagecreatefromjpeg($file->getRealPath());
+                break;
+            case 'image/png':
+                $image = @imagecreatefrompng($file->getRealPath());
+                if ($image) {
+                    $bg = imagecreatetruecolor(imagesx($image), imagesy($image));
+                    imagefill($bg, 0, 0, imagecolorallocate($bg, 255, 255, 255));
+                    imagecopy($bg, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
+                    imagedestroy($image);
+                    $image = $bg;
+                }
+                break;
+            case 'image/gif':
+                $image = @imagecreatefromgif($file->getRealPath());
+                break;
+            case 'image/webp':
+                $image = @imagecreatefromwebp($file->getRealPath());
+                break;
+        }
+        
+        if ($image) {
+            imagejpeg($image, $path, 90);
+            imagedestroy($image);
+            return 'meters/' . $filename;
+        }
+        
+        // Fallback if GD fails or format is unknown
+        $fallbackFilename = \Illuminate\Support\Str::random(40) . '.' . $file->getClientOriginalExtension();
+        $file->move($directory, $fallbackFilename);
+        return 'meters/' . $fallbackFilename;
     }
 }

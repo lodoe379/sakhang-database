@@ -50,7 +50,9 @@ Route::group([], function () {
     Route::get('/excel-editor', [MeterReadingController::class, 'index'])->name('excel.editor');
     Route::post('/excel-editor', [MeterReadingController::class, 'store'])->name('excel.editor.store');
     Route::post('/excel-editor/update/{id}', [MeterReadingController::class, 'update'])->name('excel.editor.update');
+    Route::get('/excel-editor/update/{id}', function () { return redirect()->route('excel.editor'); });
     Route::post('/excel-editor/delete/{id}', [MeterReadingController::class, 'destroy'])->name('excel.editor.destroy');
+    Route::get('/excel-editor/delete/{id}', function () { return redirect()->route('excel.editor'); });
     Route::post('/excel-editor/import', [MeterReadingController::class, 'import'])->name('excel.editor.import');
     Route::get('/excel-editor/import', function () {
         return redirect()->route('excel.editor');

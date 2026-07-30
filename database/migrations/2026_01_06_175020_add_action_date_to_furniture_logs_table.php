@@ -11,7 +11,6 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('furniture_logs', function (Blueprint $table) {
-            $table->text('remark')->nullable();
             $table->date('action_date')->nullable();
         });
     }
@@ -22,7 +21,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('furniture_logs', function (Blueprint $table) {
-            $table->dropColumn(['remark', 'action_date']);
+            $table->dropColumn(['action_date']);
         });
     }
 };

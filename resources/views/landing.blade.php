@@ -135,11 +135,11 @@
                             <div class="form-group"><label>Contact Phone <span style="color:red;">*</span></label><input type="text" name="phone" required placeholder="Active phone number"></div>
                             
                             <div class="form-group">
-                                <label>Building Location <span style="color:red;">*</span></label>
+                                <label>Building Name <span style="color:red;">*</span></label>
                                 <select name="building" required>
                                     <option value="" disabled selected>-- Select Building --</option>
                                     @php
-                                        $comp_buildings = config('app_data.buildings');
+                                        $comp_buildings = config('app_data.buildings', []);
                                         $comp_buildings = array_unique($comp_buildings);
                                         sort($comp_buildings);
                                     @endphp
@@ -194,7 +194,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Personnel Name <span style="color:red;">*</span></label>
+                                <label>Personal Name <span style="color:red;">*</span></label>
                                 <input type="text" name="name" required placeholder="Full name">
                             </div>
                             
@@ -246,11 +246,11 @@
                     </div>
                     <form action="{{ route('consumer.search') }}" method="GET">
                         <div class="form-group">
-                            <label>Building / Block</label>
+                            <label>Building Name</label>
                             <select name="building" required>
                                 <option value="" disabled {{ !isset($search_building) ? 'selected' : '' }}>-- Select Building --</option>
                                 @php
-                                    $buildings = config('app_data.buildings');
+                                    $buildings = config('app_data.buildings', []);
                                     $buildings = array_unique($buildings);
                                     sort($buildings);
                                 @endphp
@@ -326,7 +326,7 @@
                                         </div>
 
                                         <div>
-                                            <div style="font-size: 9px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Building</div>
+                                            <div style="font-size: 9px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Building Name</div>
                                             <div style="font-size: 0.95rem; font-weight: 700; color: #334155;">{{ $consumer['building'] ?? 'N/A' }}</div>
                                         </div>
 
