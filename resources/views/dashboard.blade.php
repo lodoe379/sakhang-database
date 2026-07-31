@@ -192,6 +192,20 @@
                     </div>
                 </div>
                 @endif
+
+                <!-- Global Search Box -->
+                <div onclick="showGlobalSearch()"
+                    style="background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); padding: 20px; color: white; cursor: pointer; transition: all 0.3s ease; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);"
+                    onmouseover="this.style.transform='translateY(-3px)'" 
+                    onmouseout="this.style.transform='translateY(0)'">
+                    <div style="font-size: 16px; opacity: 0.9; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                        <span>🔍</span> GLOBAL SEARCH
+                    </div>
+                    <div style="display: flex; flex-direction: column; justify-content: center; height: 46px;">
+                        <div style="font-size: 14px; opacity: 0.9; font-weight: 500;">Search Everything</div>
+                        <div style="font-size: 10px; opacity: 0.7; font-weight: 700; text-transform: uppercase; margin-top: 4px; letter-spacing: 0.5px;">Meter Data & Furniture</div>
+                    </div>
+                </div>
             </div>
 
             <!-- (Closed dashboard-view below) -->
@@ -273,6 +287,46 @@
                 </div>
             </div>
         </div>
+
+        <!-- Global Search View -->
+        <div id="global-search-view" style="display: none; height: 100%; flex-direction: column;" class="py-2">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="background: #6366f1; color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;">🔍</div>
+                    <h4 style="margin: 0; font-size: 20px;">Global Search</h4>
+                </div>
+                <button onclick="showDashboard()" class="btn"
+                    style="width: auto; padding: 8px 16px; font-size: 14px; background: #1e3a5f; border: none; color: white; border-radius: 8px; font-weight: 600;">← Back to Dashboard</button>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <input type="text" id="global-search-input" placeholder="Type to search building, room, name, or consumer ID..." 
+                    style="width: 100%; padding: 15px 20px; font-size: 16px; border: 2px solid #cbd5e1; border-radius: 12px; outline: none; transition: border-color 0.2s;"
+                    onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#cbd5e1'">
+            </div>
+
+            <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; overflow: hidden;">
+                <!-- Meter Data Results -->
+                <div style="background: white; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden;">
+                    <div style="background: #f1f5f9; padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #334155; display: flex; align-items: center; gap: 8px;">
+                        <span>📋</span> Meter Data Results
+                    </div>
+                    <div id="search-results-meters" style="flex: 1; overflow-y: auto; padding: 15px;">
+                        <div style="color: #94a3b8; text-align: center; margin-top: 20px;">Type above to search...</div>
+                    </div>
+                </div>
+
+                <!-- Furniture Records Results -->
+                <div style="background: white; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden;">
+                    <div style="background: #f1f5f9; padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #334155; display: flex; align-items: center; gap: 8px;">
+                        <span>🪑</span> Furniture Records Results
+                    </div>
+                    <div id="search-results-furniture" style="flex: 1; overflow-y: auto; padding: 15px;">
+                        <div style="color: #94a3b8; text-align: center; margin-top: 20px;">Type above to search...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -313,7 +367,78 @@
         function showDashboard() {
             document.getElementById('dashboard-view').style.display = 'block';
             document.getElementById('furniture-table-view').style.display = 'none';
+            document.getElementById('global-search-view').style.display = 'none';
         }
+
+        function showGlobalSearch() {
+            document.getElementById('dashboard-view').style.display = 'none';
+            document.getElementById('furniture-table-view').style.display = 'none';
+            document.getElementById('global-search-view').style.display = 'flex';
+            document.getElementById('global-search-input').focus();
+        }
+
+        // Global Search Logic
+        let searchTimeout;
+        document.getElementById('global-search-input').addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim();
+            
+            const meterContainer = document.getElementById('search-results-meters');
+            const furnitureContainer = document.getElementById('search-results-furniture');
+
+            if (query.length < 2) {
+                meterContainer.innerHTML = '<div style="color: #94a3b8; text-align: center; margin-top: 20px;">Type above to search...</div>';
+                furnitureContainer.innerHTML = '<div style="color: #94a3b8; text-align: center; margin-top: 20px;">Type above to search...</div>';
+                return;
+            }
+
+            meterContainer.innerHTML = '<div style="color: #64748b; text-align: center; margin-top: 20px;">Searching...</div>';
+            furnitureContainer.innerHTML = '<div style="color: #64748b; text-align: center; margin-top: 20px;">Searching...</div>';
+
+            searchTimeout = setTimeout(() => {
+                fetch(`/dashboard/search?q=${encodeURIComponent(query)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        // Render Meters
+                        if (data.meters && data.meters.length > 0) {
+                            meterContainer.innerHTML = data.meters.map(m => `
+                                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+                                    <div style="font-weight: 600; color: #0f172a; margin-bottom: 4px;">${m.building} - Room ${m.room}</div>
+                                    <div style="font-size: 13px; color: #475569;">Name: ${m.name_on_bill || 'N/A'}</div>
+                                    <div style="font-size: 13px; color: #475569;">Meter: ${m.meter_number || 'N/A'} | Consumer ID: ${m.consumer_id || 'N/A'}</div>
+                                </div>
+                            `).join('');
+                        } else {
+                            meterContainer.innerHTML = '<div style="color: #ef4444; text-align: center; margin-top: 20px;">No meter records found.</div>';
+                        }
+
+                        // Render Furniture
+                        if (data.furniture && data.furniture.length > 0) {
+                            furnitureContainer.innerHTML = data.furniture.map(f => {
+                                let itemsList = '';
+                                if (f.items) {
+                                    try {
+                                        const items = typeof f.items === 'string' ? JSON.parse(f.items) : f.items;
+                                        itemsList = items.map(i => `${i.name} (${i.qty})`).join(', ');
+                                    } catch(e) {}
+                                }
+                                return `
+                                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 10px; border-left: 4px solid ${f.type === 'Lend' ? '#ef4444' : '#10b981'}">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                        <div style="font-weight: 600; color: #0f172a;">${f.name}</div>
+                                        <div style="font-size: 11px; font-weight: bold; color: ${f.type === 'Lend' ? '#ef4444' : '#10b981'}">${f.type.toUpperCase()}</div>
+                                    </div>
+                                    <div style="font-size: 13px; color: #475569;">Official: ${f.official_name || 'N/A'}</div>
+                                    <div style="font-size: 13px; color: #475569; margin-top: 4px; font-weight: 500;">Items: ${itemsList}</div>
+                                </div>
+                                `;
+                            }).join('');
+                        } else {
+                            furnitureContainer.innerHTML = '<div style="color: #ef4444; text-align: center; margin-top: 20px;">No furniture records found.</div>';
+                        }
+                    });
+            }, 300);
+        });
 
         function toggleFurnitureFields(value) {
             const lendFields = document.getElementById('lend-fields-dash');

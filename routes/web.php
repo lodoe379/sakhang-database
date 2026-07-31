@@ -35,6 +35,7 @@ Route::post('/complaint/reply/{complaint}', [ComplaintController::class, 'storeR
 
 Route::group([], function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/search', [DashboardController::class, 'globalSearch'])->name('dashboard.search');
     Route::get('/furniture-management', [DashboardController::class, 'furnitureManagement'])->name('furniture.management');
     Route::get('/complaints/export', [ComplaintController::class, 'export'])->name('complaints.export');
     Route::get('/furniture/export', [FurnitureController::class, 'export'])->name('furniture.export');

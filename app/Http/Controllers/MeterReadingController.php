@@ -45,12 +45,19 @@ class MeterReadingController extends Controller
             $imagePath = $this->saveAsJpg($request->file('meter_image'));
         }
 
+        $building = ucwords(strtolower(trim($request->building)));
+        $room = trim($request->room);
+        $meter_number = $request->meter_number;
+        if($meter_number && str_starts_with($meter_number, 'A903')) {
+            $meter_number = str_replace('A903', 'A093', $meter_number);
+        }
+
         MeterReading::create([
-            'building' => $request->building,
-            'room' => $request->room,
+            'building' => $building,
+            'room' => $room,
             'name_on_bill' => $request->name_on_bill,
             'in_id' => $request->in_id,
-            'meter_number' => $request->meter_number,
+            'meter_number' => $meter_number,
             'consumer_id' => $request->consumer_id,
             'account_no' => $request->account_no,
             'meter_image' => $imagePath,
@@ -82,12 +89,19 @@ class MeterReadingController extends Controller
             $reading->meter_image = $this->saveAsJpg($request->file('meter_image'));
         }
 
+        $building = ucwords(strtolower(trim($request->building)));
+        $room = trim($request->room);
+        $meter_number = $request->meter_number;
+        if($meter_number && str_starts_with($meter_number, 'A903')) {
+            $meter_number = str_replace('A903', 'A093', $meter_number);
+        }
+
         $reading->update([
-            'building' => $request->building,
-            'room' => $request->room,
+            'building' => $building,
+            'room' => $room,
             'name_on_bill' => $request->name_on_bill,
             'in_id' => $request->in_id,
-            'meter_number' => $request->meter_number,
+            'meter_number' => $meter_number,
             'consumer_id' => $request->consumer_id,
             'account_no' => $request->account_no,
         ]);
@@ -133,12 +147,19 @@ class MeterReadingController extends Controller
                 
                 if (!isset($row[0])) continue; // Skip empty rows
 
+                $b = ucwords(strtolower(trim($row[0] ?? '')));
+                $r = trim((string)($row[1] ?? ''));
+                $mn = (string)($row[4] ?? '');
+                if($mn && str_starts_with($mn, 'A903')) {
+                    $mn = str_replace('A903', 'A093', $mn);
+                }
+
                 MeterReading::create([
-                    'building' => $row[0] ?? '',
-                    'room' => (string)($row[1] ?? ''),
+                    'building' => $b,
+                    'room' => $r,
                     'name_on_bill' => (string)($row[2] ?? ''),
                     'in_id' => (string)($row[3] ?? ''),
-                    'meter_number' => (string)($row[4] ?? ''),
+                    'meter_number' => $mn,
                     'consumer_id' => (string)($row[5] ?? ''),
                     'account_no' => (string)($row[6] ?? ''),
                     'meter_image' => null, 

@@ -59,6 +59,35 @@
 @endsection
 
 @section('content')
+    @php
+        $uniqueBuildings = collect();
+        $buildingRooms = [];
+
+        foreach($readings as $r) {
+            $b = ucwords(strtolower(trim($r->building)));
+            $room = trim($r->room);
+            
+            if ($b === '') continue;
+            
+            if (!$uniqueBuildings->contains($b)) {
+                $uniqueBuildings->push($b);
+            }
+            
+            if (!isset($buildingRooms[$b])) {
+                $buildingRooms[$b] = [];
+            }
+            
+            if ($room !== '' && !in_array($room, $buildingRooms[$b])) {
+                $buildingRooms[$b][] = $room;
+            }
+        }
+
+        $uniqueBuildings = $uniqueBuildings->sort()->values();
+        
+        foreach($buildingRooms as $b => $rooms) {
+            usort($buildingRooms[$b], 'strnatcasecmp');
+        }
+    @endphp
     <div class="inner-paper">
         <div class="dashboard-header">
             <h2 style="margin: 0; color: white; font-size: 18px; font-weight: 600; letter-spacing: -0.02em;">Meter Readings Management</h2>
@@ -112,7 +141,12 @@
                         
                         <div class="form-group">
                             <label>Building Name</label>
-                            <input type="text" name="building" class="form-control" required placeholder="e.g. Block A">
+                            <input list="buildings_list" name="building" class="form-control" required placeholder="Select or type new building">
+                            <datalist id="buildings_list">
+                                @foreach($uniqueBuildings as $b)
+                                    <option value="{{ $b }}">
+                                @endforeach
+                            </datalist>
                         </div>
                         
                         <div class="form-group">
@@ -183,10 +217,10 @@
                             
                             <form action="{{ route('excel.editor.import') }}" method="POST" enctype="multipart/form-data" style="display: flex; gap: 10px; align-items: center; margin: 0;">
                                 @csrf
-                                <label for="excel-upload" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 7px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; transition: background 0.2s; margin: 0;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">
-                                    📄 Upload Data
-                                </label>
-                                <input type="file" id="excel-upload" name="excel_file" accept=".xlsx,.xls" required style="display: none;" onchange="if(this.files[0]) { this.form.submit(); }">
+                                <input type="file" name="excel_file" accept=".xlsx,.xls" required style="font-size: 13px; padding: 4px; border: 1px solid #cbd5e1; border-radius: 6px; background: white;">
+                                <button type="submit" style="background: #10b981; color: white; border: none; padding: 7px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; transition: background 0.2s;" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">
+                                    💾 Save Data
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -254,33 +288,7 @@
                 <select id="modalSearchBuilding" class="form-control" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px;">
                     <option value="">-- All Buildings --</option>
                     @php
-                        $uniqueBuildings = collect();
-                        $buildingRooms = [];
-
-                        foreach($readings as $r) {
-                            $b = ucwords(strtolower(trim($r->building)));
-                            $room = trim($r->room);
-                            
-                            if ($b === '') continue;
-                            
-                            if (!$uniqueBuildings->contains($b)) {
-                                $uniqueBuildings->push($b);
-                            }
-                            
-                            if (!isset($buildingRooms[$b])) {
-                                $buildingRooms[$b] = [];
-                            }
-                            
-                            if ($room !== '' && !in_array($room, $buildingRooms[$b])) {
-                                $buildingRooms[$b][] = $room;
-                            }
-                        }
-
-                        $uniqueBuildings = $uniqueBuildings->sort()->values();
-                        
-                        foreach($buildingRooms as $b => $rooms) {
-                            usort($buildingRooms[$b], 'strnatcasecmp');
-                        }
+                        // $uniqueBuildings and $buildingRooms are now computed at the top of the file
                     @endphp
                     @foreach($uniqueBuildings as $b)
                         <option value="{{ $b }}">{{ $b }}</option>

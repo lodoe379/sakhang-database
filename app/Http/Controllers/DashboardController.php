@@ -109,4 +109,34 @@ class DashboardController extends Controller
         Session::forget('loggedin');
         return redirect()->route('landing');
     }
+
+    public function globalSearch(Request $request)
+    {
+        if (!Session::get('loggedin')) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $query = $request->q;
+        if (!$query) {
+            return response()->json(['meters' => [], 'furniture' => []]);
+        }
+
+        $meters = \App\Models\MeterReading::where('building', 'like', "%$query%")
+            ->orWhere('room', 'like', "%$query%")
+            ->orWhere('name_on_bill', 'like', "%$query%")
+            ->orWhere('meter_number', 'like', "%$query%")
+            ->orWhere('consumer_id', 'like', "%$query%")
+            ->limit(20)->get();
+
+        $furniture = \App\Models\FurnitureLog::where('name', 'like', "%$query%")
+            ->orWhere('official_name', 'like', "%$query%")
+            ->orWhere('items', 'like', "%$query%")
+            ->orWhere('remark', 'like', "%$query%")
+            ->limit(20)->get();
+
+        return response()->json([
+            'meters' => $meters,
+            'furniture' => $furniture
+        ]);
+    }
 }
