@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="landing-wrapper" id="landing-main-wrapper">
+    <div class="landing-wrapper bg-animated-mesh" id="landing-main-wrapper">
 
         <!-- RIGHT PANEL: CONTENT -->
-        <div class="right-panel" id="primary-panel">
+        <div class="right-panel" id="primary-panel" style="background: transparent;">
             @if(session('message'))
-                <div id="success-notification" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1e3a5f; color: white; padding: 40px; border-radius: 30px; font-weight: 700; z-index: 9999; box-shadow: 0 30px 60px rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; gap: 20px; animation: modalPop 0.5s cubic-bezier(0.16, 1, 0.3, 1); min-width: 350px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+                <div id="success-notification" class="glass-panel" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 40px; border-radius: 30px; font-weight: 700; z-index: 9999; display: flex; flex-direction: column; align-items: center; gap: 20px; animation: modalPop 0.5s cubic-bezier(0.16, 1, 0.3, 1); min-width: 350px; text-align: center;">
                     <div style="background: #22c55e; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);">✓</div>
                     <div style="font-size: 22px; letter-spacing: 0.5px;">{{ session('message') }}</div>
                     
@@ -36,38 +36,38 @@
                 </style>
             @endif
 
-            <div class="login-card portal-mode" id="main-content-card">
+            <div class="login-card portal-mode glass-panel animate-fade-in" id="main-content-card">
                 
                 <!-- MODE SELECTION / PORTAL -->
                 <div id="login-section" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px;">
                     <div class="mode-container" id="main-minimal-menu" style="gap: 40px; width: 100%; justify-content: center;">
-                        <div class="mode-box sakhang-main" onclick="togglePortalOptions()" style="flex: 0 1 300px; padding: 60px 40px; background: rgba(132, 204, 22, 0.08); border: 2px solid rgba(132, 204, 22, 0.2); border-radius: 40px;">
-                            <div class="icon" style="color: #84cc16; font-size: 64px; margin-bottom: 20px;">
+                        <div class="mode-box sakhang-main glass-card" onclick="togglePortalOptions()" style="flex: 0 1 300px; padding: 60px 40px; border-radius: 40px;">
+                            <div class="icon" style="color: #10b981; font-size: 64px; margin-bottom: 20px;">
                                 <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor"><path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z" /></svg>
                             </div>
                             <div class="label" style="font-size: 24px; letter-spacing: 1px;">Sakhang</div>
                         </div>
-                        <div class="mode-box track-main" onclick="selectMode('status')" style="flex: 0 1 300px; padding: 60px 40px; background: rgba(59, 130, 246, 0.08); border: 2px solid rgba(59, 130, 246, 0.2); border-radius: 40px;">
-                            <div class="icon" style="color: #3b82f6; font-size: 64px; margin-bottom: 20px;">📊</div>
+                        <div class="mode-box track-main glass-card" onclick="selectMode('status')" style="flex: 0 1 300px; padding: 60px 40px; border-radius: 40px;">
+                            <div class="icon" style="color: #6366f1; font-size: 64px; margin-bottom: 20px;">📊</div>
                             <div class="label" style="font-size: 24px; letter-spacing: 1px;">Track Progress</div>
                         </div>
                     </div>
 
                     <div id="portal-sub-options" style="display:none; animation: fadeIn 0.4s ease-out; width: 100%;">
                         <div class="mode-container" style="margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-                            <div class="mode-box electrical" onclick="selectMode('complaint')">
+                            <div class="mode-box electrical glass-card" onclick="selectMode('complaint')">
                                 <div class="icon">⚡</div>
                                 <div class="label">Electrical Complaint</div>
                             </div>
-                            <div class="mode-box furniture" onclick="selectMode('furniture-options')">
+                            <div class="mode-box furniture glass-card" onclick="selectMode('furniture-options')">
                                 <div class="icon">🪑</div>
                                 <div class="label">Furniture Services</div>
                             </div>
-                            <div class="mode-box room-furniture" onclick="selectMode('room-furniture')">
+                            <div class="mode-box room-furniture glass-card" onclick="selectMode('room-furniture')">
                                 <div class="icon">📋</div>
                                 <div class="label">Room Furniture List</div>
                             </div>
-                            <div class="mode-box consumer" onclick="selectMode('consumer')">
+                            <div class="mode-box consumer glass-card" onclick="selectMode('consumer')">
                                 <div class="icon">🔍</div>
                                 <div class="label">Consumer Search</div>
                             </div>

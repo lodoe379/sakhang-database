@@ -213,7 +213,7 @@
                         </h3>
                         
                         <div style="display: flex; gap: 15px; align-items: center;">
-                            <input type="text" id="fakeSearchBox" readonly placeholder="🔍 Advanced Search..." style="background: #f8fafc; padding: 7px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; width: 200px; cursor: pointer; transition: background 0.2s; margin: 0;" title="Click to search by Building and Room" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">
+                            <input type="text" id="fakeSearchBox" readonly placeholder="🔍 Empty Room Search..." style="background: #f8fafc; padding: 7px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; width: 200px; cursor: pointer; transition: background 0.2s; margin: 0;" title="Click to search by Building and Room" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">
                             
                             <form action="{{ route('excel.editor.import') }}" method="POST" enctype="multipart/form-data" style="display: flex; gap: 10px; align-items: center; margin: 0;">
                                 @csrf
@@ -230,7 +230,7 @@
 
                     
                     <div class="table-wrapper">
-                        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; color: #1e293b;">
                             <thead>
                                 <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
                                     <th style="padding: 12px 10px; color: #475569;">Building Name</th>
@@ -279,7 +279,7 @@
     <div id="searchModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
         <div style="background: white; border-radius: 12px; padding: 25px; width: 25%; min-width: 320px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="margin: 0; font-size: 18px; color: #1e293b; font-weight: 600;">🔍 Advanced Search</h3>
+                <h3 style="margin: 0; font-size: 18px; color: #1e293b; font-weight: 600;">🔍 Empty Room Search</h3>
                 <button type="button" id="closeSearchModalBtn" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b; line-height: 1;">&times;</button>
             </div>
             

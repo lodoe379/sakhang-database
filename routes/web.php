@@ -7,6 +7,7 @@ use App\Http\Controllers\ConsumerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MeterReadingController;
 use App\Http\Controllers\RoomFurnitureController;
+use App\Http\Controllers\RoomDataController;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -22,7 +23,9 @@ Route::get('/', function (Request $request) {
     return view('landing', compact('nextComplaintSno', 'nextLendSno', 'nextReturnSno'));
 })->name('landing');
 
-Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+Route::get('/login', function () {
+    return redirect()->route('landing', ['mode' => 'admin']);
+})->name('login');
 Route::post('/login', [DashboardController::class, 'login']);
 Route::post('/logout', [DashboardController::class, 'logout'])->name('logout');
 
@@ -35,7 +38,10 @@ Route::post('/complaint/reply/{complaint}', [ComplaintController::class, 'storeR
 
 Route::group([], function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard/search', [DashboardController::class, 'globalSearch'])->name('dashboard.search');
+    Route::post('/dashboard/update-room', [DashboardController::class, 'updateRoom'])->name('dashboard.updateRoom');
+    Route::post('/dashboard/delete-room', [DashboardController::class, 'deleteRoom'])->name('dashboard.deleteRoom');
+    Route::post('/dashboard/save-room-row', [DashboardController::class, 'saveRoomRow'])->name('dashboard.saveRoomRow');
+    Route::get('/dashboard/search-room', [DashboardController::class, 'searchRoomData'])->name('dashboard.searchRoom');
     Route::get('/furniture-management', [DashboardController::class, 'furnitureManagement'])->name('furniture.management');
     Route::get('/complaints/export', [ComplaintController::class, 'export'])->name('complaints.export');
     Route::get('/furniture/export', [FurnitureController::class, 'export'])->name('furniture.export');
@@ -47,6 +53,10 @@ Route::group([], function () {
     // Standalone Electrical Complaints Page
     Route::get('/electrical-complaints', [ComplaintController::class, 'index'])->name('complaints.index');
     Route::post('/electrical-complaints/import', [ComplaintController::class, 'import'])->name('complaints.import');
+    
+    // Standalone Room Data Page
+    Route::get('/room-data', [RoomDataController::class, 'index'])->name('room.data');
+    
     // Meter Readings (formerly Excel Editor Module)
     Route::get('/excel-editor', [MeterReadingController::class, 'index'])->name('excel.editor');
     Route::post('/excel-editor', [MeterReadingController::class, 'store'])->name('excel.editor.store');
