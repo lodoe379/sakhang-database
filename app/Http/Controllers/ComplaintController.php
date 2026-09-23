@@ -83,7 +83,7 @@ class ComplaintController extends Controller
             'building' => 'required|string',
             'room' => 'required|string',
             'complaint' => 'required|string',
-            'image' => 'required|image|max:10240',
+            'image' => 'required|mimes:jpg,jpeg|max:10240',
             'video' => 'nullable|mimes:mp4,mov,avi|max:20480',
         ]);
 

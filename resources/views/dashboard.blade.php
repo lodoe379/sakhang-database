@@ -377,7 +377,17 @@
                 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 8px; text-transform: uppercase;">Building Name</label>
-                    <input type="text" id="modal-building-select" placeholder="Enter Building" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; box-sizing: border-box;">
+                    <select id="modal-building-select" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; box-sizing: border-box;">
+                        <option value="">-- Select Building --</option>
+                        @php
+                            $comp_buildings = config('app_data.buildings', []);
+                            $comp_buildings = array_unique($comp_buildings);
+                            sort($comp_buildings);
+                        @endphp
+                        @foreach($comp_buildings as $b)
+                            <option value="{{ $b }}">{{ $b }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div style="margin-bottom: 30px;">

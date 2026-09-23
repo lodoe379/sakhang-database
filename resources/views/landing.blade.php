@@ -10,21 +10,7 @@
                     <div style="background: #22c55e; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);">✓</div>
                     <div style="font-size: 22px; letter-spacing: 0.5px;">{{ session('message') }}</div>
                     
-                    @if(session('show_emergency'))
-                        <div style="margin-top: 10px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 20px; width: 100%;">
-                            <p style="font-size: 14px; color: #94a3b8; margin-bottom: 15px; letter-spacing: 1px;"><span style="text-transform: uppercase;">Maintenance Contacts</span> : “Power out? Call us.”</p>
-                            <div style="display: flex; flex-direction: column; gap: 15px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 12px;">
-                                    <span style="color: #fbce04; font-weight: 800;">Tenzin Lodoe</span>
-                                    <span style="font-family: monospace; font-size: 16px;">7505599379</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 12px;">
-                                    <span style="color: #fbce04; font-weight: 800;">Norbu Wangyal</span>
-                                    <span style="font-family: monospace; font-size: 16px;">9882134069</span>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+
 
                     <button onclick="this.parentElement.remove()" style="margin-top: 10px; background: #fbce04; color: #0f172a; border: none; padding: 15px 40px; border-radius: 50px; font-weight: 800; cursor: pointer; transition: all 0.2s;">DISMISS</button>
                 </div>
@@ -155,7 +141,7 @@
                                 <textarea name="complaint" rows="3" required placeholder="Describe the issue in detail..."></textarea>
                             </div>
 
-                            <div class="form-group"><label>Attach Photo <span style="color:red;">*</span></label><input type="file" name="image" required accept="image/*" style="border:none; padding:10px 0;"></div>
+                            <div class="form-group"><label>Attach Photo <span style="color:red;">*</span></label><input type="file" name="image" required accept=".jpg,.jpeg" style="border:none; padding:10px 0;"></div>
                             <div class="form-group"><label>Attach Video</label><input type="file" name="video" accept="video/*" style="border:none; padding:10px 0;"></div>
                         </div>
                         <button type="submit" class="btn btn-sign-in" style="background: #1e3a5f; color: white; border-radius: 50px; padding: 18px; font-weight: 700; margin-top: 20px;">SUBMIT</button>

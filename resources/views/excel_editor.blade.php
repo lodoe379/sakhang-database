@@ -82,7 +82,7 @@
             }
         }
 
-        $uniqueBuildings = $uniqueBuildings->sort()->values();
+        $uniqueBuildings = $uniqueBuildings->merge(config('app_data.buildings', []))->unique()->sort()->values();
         
         foreach($buildingRooms as $b => $rooms) {
             usort($buildingRooms[$b], 'strnatcasecmp');
