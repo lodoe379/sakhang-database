@@ -118,7 +118,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <div style="background: #3b82f6; color: white; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px;">⚡</div>
-                        <h4 style="margin: 0; font-size: 16px;" id="complaint-table-title">All Electrical Complaints</h4>
+                        <h4 style="margin: 0; font-size: 16px; color: #10b981;" id="complaint-table-title">All Electrical Complaints</h4>
                     </div>
                     <div style="display: flex; gap: 10px;">
                         <button onclick="document.getElementById('importModal').style.display='flex'" class="btn"

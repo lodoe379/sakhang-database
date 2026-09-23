@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Shuchkin\SimpleXLSX;
-
+use Illuminate\Support\Str;
 use App\Models\MeterReading;
 
 class MeterReadingController extends Controller
@@ -32,23 +32,34 @@ class MeterReadingController extends Controller
         $request->validate([
             'building' => 'required|string',
             'room' => 'required|string',
-            'consumer_id' => 'required|string',
-            'in_id' => 'required|string',
-            'meter_number' => 'required|string',
+            'name_on_bill' => 'nullable|string',
+            'in_id' => 'nullable|string',
+            'meter_number' => 'nullable|string',
+            'consumer_id' => 'nullable|string',
+            'account_no' => 'nullable|string',
             'meter_image' => 'nullable|image|max:10240',
         ]);
 
         $imagePath = null;
         if ($request->hasFile('meter_image')) {
-            $imagePath = $request->file('meter_image')->store('meters', 'public');
+            $imagePath = $this->saveAsJpg($request->file('meter_image'));
+        }
+
+        $building = ucwords(strtolower(trim($request->building)));
+        $room = trim($request->room);
+        $meter_number = $request->meter_number;
+        if($meter_number && str_starts_with($meter_number, 'A903')) {
+            $meter_number = str_replace('A903', 'A093', $meter_number);
         }
 
         MeterReading::create([
-            'building' => $request->building,
-            'room' => $request->room,
-            'consumer_id' => $request->consumer_id,
+            'building' => $building,
+            'room' => $room,
+            'name_on_bill' => $request->name_on_bill,
             'in_id' => $request->in_id,
-            'meter_number' => $request->meter_number,
+            'meter_number' => $meter_number,
+            'consumer_id' => $request->consumer_id,
+            'account_no' => $request->account_no,
             'meter_image' => $imagePath,
         ]);
 
@@ -66,22 +77,33 @@ class MeterReadingController extends Controller
         $request->validate([
             'building' => 'required|string',
             'room' => 'required|string',
-            'consumer_id' => 'required|string',
-            'in_id' => 'required|string',
-            'meter_number' => 'required|string',
+            'name_on_bill' => 'nullable|string',
+            'in_id' => 'nullable|string',
+            'meter_number' => 'nullable|string',
+            'consumer_id' => 'nullable|string',
+            'account_no' => 'nullable|string',
             'meter_image' => 'nullable|image|max:10240',
         ]);
 
         if ($request->hasFile('meter_image')) {
-            $reading->meter_image = $request->file('meter_image')->store('meters', 'public');
+            $reading->meter_image = $this->saveAsJpg($request->file('meter_image'));
+        }
+
+        $building = ucwords(strtolower(trim($request->building)));
+        $room = trim($request->room);
+        $meter_number = $request->meter_number;
+        if($meter_number && str_starts_with($meter_number, 'A903')) {
+            $meter_number = str_replace('A903', 'A093', $meter_number);
         }
 
         $reading->update([
-            'building' => $request->building,
-            'room' => $request->room,
-            'consumer_id' => $request->consumer_id,
+            'building' => $building,
+            'room' => $room,
+            'name_on_bill' => $request->name_on_bill,
             'in_id' => $request->in_id,
-            'meter_number' => $request->meter_number,
+            'meter_number' => $meter_number,
+            'consumer_id' => $request->consumer_id,
+            'account_no' => $request->account_no,
         ]);
 
         return redirect()->back()->with('success', 'Meter reading updated successfully!');
@@ -123,15 +145,23 @@ class MeterReadingController extends Controller
             foreach ($rows as $index => $row) {
                 if ($index === 0) continue; 
                 
-                // Expecting at least 5 columns: Building, Room, Consumer ID, IN ID, Meter Number
                 if (!isset($row[0])) continue; // Skip empty rows
 
+                $b = ucwords(strtolower(trim($row[0] ?? '')));
+                $r = trim((string)($row[1] ?? ''));
+                $mn = (string)($row[4] ?? '');
+                if($mn && str_starts_with($mn, 'A903')) {
+                    $mn = str_replace('A903', 'A093', $mn);
+                }
+
                 MeterReading::create([
-                    'building' => $row[0] ?? '',
-                    'room' => (string)($row[1] ?? ''),
-                    'consumer_id' => (string)($row[2] ?? ''),
+                    'building' => $b,
+                    'room' => $r,
+                    'name_on_bill' => (string)($row[2] ?? ''),
                     'in_id' => (string)($row[3] ?? ''),
-                    'meter_number' => (string)($row[4] ?? ''),
+                    'meter_number' => $mn,
+                    'consumer_id' => (string)($row[5] ?? ''),
+                    'account_no' => (string)($row[6] ?? ''),
                     'meter_image' => null, 
                 ]);
                 $count++;
@@ -141,5 +171,52 @@ class MeterReadingController extends Controller
         } else {
             return redirect()->back()->withErrors(['excel_file' => 'Failed to parse the Excel file.']);
         }
+    }
+
+    private function saveAsJpg($file)
+    {
+        $filename = \Illuminate\Support\Str::random(40) . '.jpg';
+        $directory = public_path('storage/meters');
+        
+        if (!file_exists($directory)) {
+            mkdir($directory, 0755, true);
+        }
+        
+        $path = $directory . '/' . $filename;
+        $mime = $file->getMimeType();
+        $image = null;
+        
+        switch ($mime) {
+            case 'image/jpeg':
+                $image = @imagecreatefromjpeg($file->getRealPath());
+                break;
+            case 'image/png':
+                $image = @imagecreatefrompng($file->getRealPath());
+                if ($image) {
+                    $bg = imagecreatetruecolor(imagesx($image), imagesy($image));
+                    imagefill($bg, 0, 0, imagecolorallocate($bg, 255, 255, 255));
+                    imagecopy($bg, $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
+                    imagedestroy($image);
+                    $image = $bg;
+                }
+                break;
+            case 'image/gif':
+                $image = @imagecreatefromgif($file->getRealPath());
+                break;
+            case 'image/webp':
+                $image = @imagecreatefromwebp($file->getRealPath());
+                break;
+        }
+        
+        if ($image) {
+            imagejpeg($image, $path, 90);
+            imagedestroy($image);
+            return 'meters/' . $filename;
+        }
+        
+        // Fallback if GD fails or format is unknown
+        $fallbackFilename = \Illuminate\Support\Str::random(40) . '.' . $file->getClientOriginalExtension();
+        $file->move($directory, $fallbackFilename);
+        return 'meters/' . $fallbackFilename;
     }
 }
