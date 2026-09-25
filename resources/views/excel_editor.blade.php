@@ -141,9 +141,14 @@
                         
                         <div class="form-group">
                             <label>Building Name</label>
-                            <input list="buildings_list" name="building" class="form-control" required placeholder="Select or type new building">
+                            <input list="buildings_list" name="building" class="form-control" required placeholder="Select or type new building" autocomplete="off">
                             <datalist id="buildings_list">
-                                @foreach($uniqueBuildings as $b)
+                                @php
+                                    $comp_buildings = config('app_data.buildings', []);
+                                    $comp_buildings = array_unique($comp_buildings);
+                                    sort($comp_buildings);
+                                @endphp
+                                @foreach($comp_buildings as $b)
                                     <option value="{{ $b }}">
                                 @endforeach
                             </datalist>

@@ -29,6 +29,9 @@ Route::get('/login', function () {
 Route::post('/login', [DashboardController::class, 'login']);
 Route::post('/logout', [DashboardController::class, 'logout'])->name('logout');
 
+Route::get('/complaint-success', function () {
+    return view('complaint_success');
+})->name('complaint.success');
 Route::post('/submit-complaint', [ComplaintController::class, 'store'])->name('complaint.store');
 Route::post('/submit-furniture', [FurnitureController::class, 'store'])->name('furniture.store');
 Route::get('/search-consumer', [ConsumerController::class, 'search'])->name('consumer.search');

@@ -9,12 +9,12 @@ class ConsumerController extends Controller
 {
     public function search(Request $request)
     {
-        if (!$request->has('building')) {
+        if (!$request->has('room')) {
             return redirect()->route('landing')->with('active_mode', 'consumer');
         }
 
-        $building = $request->building;
-        $room = $request->room; // This is used for both Room No and Official Name depending on category
+        $building = null;
+        $room = $request->room; // This is used for Room No, Name, Dept, etc.
 
         $json_path = storage_path('app/consumers.json');
         $consumers = [];
@@ -25,23 +25,14 @@ class ConsumerController extends Controller
                 foreach ($consumers_db as $c) {
                     $search_lower = strtolower($room);
 
-                    if ($building === 'Official') {
-                        // For Official, search in name, department, and building fields
-                        $name_match = isset($c['name']) && stripos($c['name'], $room) !== false;
-                        $dept_match = isset($c['department']) && stripos($c['department'], $room) !== false;
-                        $build_match = isset($c['building']) && stripos($c['building'], 'Official') !== false;
+                    // Search in name, department, building, and room
+                    $name_match = isset($c['name']) && stripos($c['name'], $room) !== false;
+                    $dept_match = isset($c['department']) && stripos($c['department'], $room) !== false;
+                    $build_match = isset($c['building']) && stripos($c['building'], $room) !== false;
+                    $r_match = isset($c['room']) && ((string) $c['room'] === (string) $room);
 
-                        if (($name_match || $dept_match) && $build_match) {
-                            $consumers[] = $c;
-                        }
-                    } else {
-                        // Standard search: Building must match and Room should match exactly
-                        $b_match = isset($c['building']) && (stripos($c['building'], $building) !== false);
-                        $r_match = isset($c['room']) && ((string) $c['room'] === (string) $room);
-
-                        if ($b_match && $r_match) {
-                            $consumers[] = $c;
-                        }
+                    if ($name_match || $dept_match || $build_match || $r_match) {
+                        $consumers[] = $c;
                     }
                 }
             }

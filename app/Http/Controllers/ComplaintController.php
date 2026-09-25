@@ -83,7 +83,7 @@ class ComplaintController extends Controller
             'building' => 'required|string',
             'room' => 'required|string',
             'complaint' => 'required|string',
-            'image' => 'required|mimes:jpg,jpeg|max:10240',
+            'image' => 'required|image|max:10240',
             'video' => 'nullable|mimes:mp4,mov,avi|max:20480',
         ]);
 
@@ -109,7 +109,7 @@ class ComplaintController extends Controller
             'done' => false,
         ]);
 
-        return redirect()->route('landing')->with('message', 'Form filled successfully!')->with('show_emergency', true);
+        return redirect()->route('complaint.success');
     }
 
     public function toggle(Complaint $complaint)

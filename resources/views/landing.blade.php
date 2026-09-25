@@ -111,7 +111,7 @@
                         </h2>
                         <p>Report an electrical issue for prompt maintenance.</p>
                     </div>
-                    <form action="{{ route('complaint.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('complaint.store') }}" method="POST" enctype="multipart/form-data" onsubmit="const btn = this.querySelector('button[type=submit]'); setTimeout(() => { btn.disabled = true; btn.innerText = 'SUBMITTING...'; }, 10);">
                         @csrf
                         <div class="landscape-form-grid" style="grid-template-columns: 1fr 1fr; gap: 30px;">
                             <div class="form-group"><label>Reference S.No</label><input type="text" value="{{ $nextComplaintSno }}" disabled></div>
@@ -141,7 +141,7 @@
                                 <textarea name="complaint" rows="3" required placeholder="Describe the issue in detail..."></textarea>
                             </div>
 
-                            <div class="form-group"><label>Attach Photo <span style="color:red;">*</span></label><input type="file" name="image" required accept=".jpg,.jpeg" style="border:none; padding:10px 0;"></div>
+                            <div class="form-group"><label>Attach Photo <span style="color:red;">*</span></label><input type="file" name="image" required accept="image/*" style="border:none; padding:10px 0;"></div>
                             <div class="form-group"><label>Attach Video</label><input type="file" name="video" accept="video/*" style="border:none; padding:10px 0;"></div>
                         </div>
                         <button type="submit" class="btn btn-sign-in" style="background: #1e3a5f; color: white; border-radius: 50px; padding: 18px; font-weight: 700; margin-top: 20px;">SUBMIT</button>
@@ -159,7 +159,7 @@
                         </h2>
                         <p>Apply for furniture lending or return existing items.</p>
                     </div>
-                    <form action="{{ route('furniture.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('furniture.store') }}" method="POST" enctype="multipart/form-data" onsubmit="const btn = this.querySelector('button[type=submit]'); setTimeout(() => { btn.disabled = true; btn.innerText = 'SUBMITTING...'; }, 10);">
                         @csrf
                         <div class="landscape-form-grid" style="grid-template-columns: 1fr 1fr; gap: 30px;">
                             <div class="form-group">
@@ -231,19 +231,9 @@
                         <p>Locate your consumer records by building and room.</p>
                     </div>
                     <form action="{{ route('consumer.search') }}" method="GET">
-                        <div class="form-group">
+                        <div class="form-group" style="display:none;">
                             <label>Building Name</label>
-                            <select name="building" required>
-                                <option value="" disabled {{ !isset($search_building) ? 'selected' : '' }}>-- Select Building --</option>
-                                @php
-                                    $buildings = config('app_data.buildings', []);
-                                    $buildings = array_unique($buildings);
-                                    sort($buildings);
-                                @endphp
-                                @foreach($buildings as $b)
-                                    <option value="{{ $b }}" {{ (isset($search_building) && $search_building == $b) ? 'selected' : '' }}>{{ $b }}</option>
-                                @endforeach
-                            </select>
+                            <input type="text" name="building" value="">
                         </div>
                         <div class="form-group">
                             <label>Room No / Official Name</label>
