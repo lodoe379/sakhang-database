@@ -1,9 +1,16 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="en">
 
-@section('title', 'Electrical Complaints')
-
-@section('styles')
-<style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrical Complaints</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="http://localhost/css/style.css">
+    <meta name="csrf-token" content="">
+    <style>
     body {
         overflow: hidden; 
     }
@@ -81,20 +88,19 @@
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
 </style>
-@endsection
+</head>
 
-@section('content')
-    <div class="inner-paper">
+<body>
+        <div class="inner-paper">
         <div class="dashboard-header">
             <h2 style="margin: 0; color: white; font-size: 18px; font-weight: 600; letter-spacing: -0.02em;">Electrical Complaints Management</h2>
             <div style="display: flex; gap: 10px;">
-                <a href="{{ route('dashboard') }}" class="btn"
+                <a href="http://localhost/dashboard" class="btn"
                     style="width: auto; padding: 6px 16px; font-size: 12px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.1); color: white; font-weight: 500; transition: all 0.2s; border-radius: 8px; text-decoration: none;"
                     onmouseover="this.style.background='rgba(255,255,255,0.25)'"
                     onmouseout="this.style.background='rgba(255,255,255,0.15)'">← Dashboard</a>
-                <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                    @csrf
-                    <button type="submit" class="btn"
+                <form action="http://localhost/logout" method="POST" style="margin: 0;">
+                    <input type="hidden" name="_token" value="" autocomplete="off">                    <button type="submit" class="btn"
                         style="width: auto; padding: 6px 16px; font-size: 12px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.1); color: white; font-weight: 500; transition: all 0.2s; border-radius: 8px;"
                         onmouseover="this.style.background='rgba(255,255,255,0.25)'"
                         onmouseout="this.style.background='rgba(255,255,255,0.15)'">Logout</button>
@@ -103,17 +109,7 @@
         </div>
 
         <div class="dashboard-body">
-            @if(session('success'))
-                <div style="background: #dcfce7; border: 1px solid #bbf7d0; color: #166534; padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; font-weight: 500;">
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if(session('error'))
-                <div style="background: #fee2e2; border: 1px solid #fecaca; color: #991b1b; padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; font-weight: 500;">
-                    {{ session('error') }}
-                </div>
-            @endif
-
+                        
             <div id="complaint-table-view" style="height: 100%; flex-direction: column;" class="py-2">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                     <div style="display: flex; align-items: center; gap: 12px;">
@@ -123,7 +119,7 @@
                     <div style="display: flex; gap: 10px;">
                         <button onclick="document.getElementById('importModal').style.display='flex'" class="btn"
                             style="width: auto; padding: 6px 12px; font-size: 12px; background: #6366f1; border: none; color: white; border-radius: 8px; font-weight: 600;">📤 Import XLSX</button>
-                        <a href="{{ route('complaints.export') }}" class="btn"
+                        <a href="http://localhost/complaints/export" class="btn"
                             style="width: auto; padding: 6px 12px; font-size: 12px; background: #d97706; border: none; color: white; border-radius: 8px; font-weight: 600; text-decoration: none; display: flex; align-items: center;">📥 Export CSV</a>
                         <button onclick="window.location.reload()" class="btn"
                             style="width: auto; padding: 6px 12px; font-size: 12px; background: #059669; border: none; color: white; border-radius: 8px; font-weight: 600;">↻ Refresh</button>
@@ -148,46 +144,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($complaints as $c)
-                                    <tr class="complaint-row" data-done="{{ $c->done ? '1' : '0' }}">
-                                        <td>{{ $c->id }}</td>
-                                        <td>{{ $c->created_at }}</td>
+                                                                    <tr class="complaint-row" data-done="0">
+                                        <td>1</td>
+                                        <td>2026-09-24 07:01:47</td>
                                         <td>
-                                            <input type="date" value="{{ $c->action_date }}" 
-                                                onchange="updateComplaint({{ $c->id }}, 'action_date', this.value)"
+                                            <input type="date" value="" 
+                                                onchange="updateComplaint(1, 'action_date', this.value)"
                                                 style="padding: 4px; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; width: 100%;">
                                         </td>
                                         <td>
-                                            <strong>{{ $c->name }}</strong><br>
-                                            <span style="font-size: 0.85em; color: #64748b;">{{ $c->building }} - Room {{ $c->room }}</span>
+                                            <strong>test</strong><br>
+                                            <span style="font-size: 0.85em; color: #64748b;">test - Room test</span>
                                         </td>
-                                        <td>{{ $c->phone }}</td>
-                                        <td>{{ $c->complaint }}</td>
-                                        <td style="font-style: italic; color: #475569;">{{ $c->user_reply }}</td>
+                                        <td>123</td>
+                                        <td>test</td>
+                                        <td style="font-style: italic; color: #475569;"></td>
                                         <td>
-                                            <textarea onchange="updateComplaint({{ $c->id }}, 'remark', this.value)"
-                                                style="width: 100%; border: 1px solid #e2e8f0; border-radius: 4px; padding: 4px; font-size: 13px; min-height: 40px;">{{ $c->remark }}</textarea>
+                                            <textarea onchange="updateComplaint(1, 'remark', this.value)"
+                                                style="width: 100%; border: 1px solid #e2e8f0; border-radius: 4px; padding: 4px; font-size: 13px; min-height: 40px;"></textarea>
                                         </td>
                                         <td>
-                                            @if($c->image) 
-                                                <a href="{{ asset('storage/' . $c->image) }}" target="_blank">
-                                                    <img src="{{ asset('storage/' . $c->image) }}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #e2e8f0;">
-                                                </a> 
-                                            @endif
-                                            @if($c->signature)
-                                                <div style="margin-top: 5px; border-top: 1px solid #eee; padding-top: 5px;">
-                                                    <img src="{{ $c->signature }}" style="width: 80px; height: auto; max-height: 40px; background: #fff; border-radius: 4px;">
-                                                    <div style="font-size: 9px; color: #94a3b8; font-weight: 700; text-transform: uppercase;">E-Sign</div>
-                                                </div>
-                                            @endif
-                                        </td>
+                                                                                                                                </td>
                                         <td style="text-align: center;">
-                                            <input type="checkbox" onchange="toggleDone({{ $c->id }}, this)" {{ $c->done ? 'checked' : '' }}
+                                            <input type="checkbox" onchange="toggleDone(1, this)" 
                                                 style="width: 20px; height: 20px;">
                                         </td>
                                     </tr>
-                                @endforeach
-                            </tbody>
+                                                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -201,9 +184,8 @@
             <h3 style="margin-top: 0; color: #1e293b; font-size: 18px;">Import Electrical Complaints</h3>
             <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">Upload an XLSX file containing complaints data. Ensure columns match the standard export format.</p>
             
-            <form action="{{ route('complaints.import') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div style="margin-bottom: 20px;">
+            <form action="http://localhost/electrical-complaints/import" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="_token" value="" autocomplete="off">                <div style="margin-bottom: 20px;">
                     <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px;">Select File (.xlsx)</label>
                     <input type="file" name="file" accept=".xlsx" required
                         style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px;">
@@ -218,10 +200,12 @@
             </form>
         </div>
     </div>
-@endsection
 
-@section('scripts')
     <script>
+        // Global CSRF for AJAX
+        window.csrfToken = "";
+    </script>
+        <script>
         function toggleDone(id, checkbox) {
             const isChecked = checkbox.checked;
             fetch(`/complaint/toggle/${id}`, {
@@ -265,4 +249,6 @@
             });
         }
     </script>
-@endsection
+</body>
+
+</html>

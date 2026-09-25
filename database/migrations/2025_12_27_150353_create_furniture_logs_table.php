@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('phone');
             $table->string('official_name');
             $table->string('type'); // Lend or Return
-            $table->json('items'); // JSON array of items
+            $table->text('items'); // JSON array of items
             $table->string('application')->nullable();
             $table->text('remark')->nullable();
             $table->timestamps();

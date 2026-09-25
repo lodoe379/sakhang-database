@@ -1,30 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="landing-wrapper" id="landing-main-wrapper">
+    <div class="landing-wrapper bg-animated-mesh" id="landing-main-wrapper">
 
         <!-- RIGHT PANEL: CONTENT -->
-        <div class="right-panel" id="primary-panel">
+        <div class="right-panel" id="primary-panel" style="background: transparent;">
             @if(session('message'))
-                <div id="success-notification" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1e3a5f; color: white; padding: 40px; border-radius: 30px; font-weight: 700; z-index: 9999; box-shadow: 0 30px 60px rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; gap: 20px; animation: modalPop 0.5s cubic-bezier(0.16, 1, 0.3, 1); min-width: 350px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+                <div id="success-notification" class="glass-panel" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 40px; border-radius: 30px; font-weight: 700; z-index: 9999; display: flex; flex-direction: column; align-items: center; gap: 20px; animation: modalPop 0.5s cubic-bezier(0.16, 1, 0.3, 1); min-width: 350px; text-align: center;">
                     <div style="background: #22c55e; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);">✓</div>
                     <div style="font-size: 22px; letter-spacing: 0.5px;">{{ session('message') }}</div>
                     
-                    @if(session('show_emergency'))
-                        <div style="margin-top: 10px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 20px; width: 100%;">
-                            <p style="font-size: 14px; color: #94a3b8; margin-bottom: 15px; letter-spacing: 1px;"><span style="text-transform: uppercase;">Maintenance Contacts</span> : “Power out? Call us.”</p>
-                            <div style="display: flex; flex-direction: column; gap: 15px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 12px;">
-                                    <span style="color: #fbce04; font-weight: 800;">Tenzin Lodoe</span>
-                                    <span style="font-family: monospace; font-size: 16px;">7505599379</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 12px;">
-                                    <span style="color: #fbce04; font-weight: 800;">Norbu Wangyal</span>
-                                    <span style="font-family: monospace; font-size: 16px;">9882134069</span>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+
 
                     <button onclick="this.parentElement.remove()" style="margin-top: 10px; background: #fbce04; color: #0f172a; border: none; padding: 15px 40px; border-radius: 50px; font-weight: 800; cursor: pointer; transition: all 0.2s;">DISMISS</button>
                 </div>
@@ -36,38 +22,38 @@
                 </style>
             @endif
 
-            <div class="login-card portal-mode" id="main-content-card">
+            <div class="login-card portal-mode glass-panel animate-fade-in" id="main-content-card">
                 
                 <!-- MODE SELECTION / PORTAL -->
                 <div id="login-section" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px;">
                     <div class="mode-container" id="main-minimal-menu" style="gap: 40px; width: 100%; justify-content: center;">
-                        <div class="mode-box sakhang-main" onclick="togglePortalOptions()" style="flex: 0 1 300px; padding: 60px 40px; background: rgba(132, 204, 22, 0.08); border: 2px solid rgba(132, 204, 22, 0.2); border-radius: 40px;">
-                            <div class="icon" style="color: #84cc16; font-size: 64px; margin-bottom: 20px;">
+                        <div class="mode-box sakhang-main glass-card" onclick="togglePortalOptions()" style="flex: 0 1 300px; padding: 60px 40px; border-radius: 40px;">
+                            <div class="icon" style="color: #10b981; font-size: 64px; margin-bottom: 20px;">
                                 <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor"><path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z" /></svg>
                             </div>
                             <div class="label" style="font-size: 24px; letter-spacing: 1px;">Sakhang</div>
                         </div>
-                        <div class="mode-box track-main" onclick="selectMode('status')" style="flex: 0 1 300px; padding: 60px 40px; background: rgba(59, 130, 246, 0.08); border: 2px solid rgba(59, 130, 246, 0.2); border-radius: 40px;">
-                            <div class="icon" style="color: #3b82f6; font-size: 64px; margin-bottom: 20px;">📊</div>
+                        <div class="mode-box track-main glass-card" onclick="selectMode('status')" style="flex: 0 1 300px; padding: 60px 40px; border-radius: 40px;">
+                            <div class="icon" style="color: #6366f1; font-size: 64px; margin-bottom: 20px;">📊</div>
                             <div class="label" style="font-size: 24px; letter-spacing: 1px;">Track Progress</div>
                         </div>
                     </div>
 
                     <div id="portal-sub-options" style="display:none; animation: fadeIn 0.4s ease-out; width: 100%;">
                         <div class="mode-container" style="margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-                            <div class="mode-box electrical" onclick="selectMode('complaint')">
+                            <div class="mode-box electrical glass-card" onclick="selectMode('complaint')">
                                 <div class="icon">⚡</div>
                                 <div class="label">Electrical Complaint</div>
                             </div>
-                            <div class="mode-box furniture" onclick="selectMode('furniture-options')">
+                            <div class="mode-box furniture glass-card" onclick="selectMode('furniture-options')">
                                 <div class="icon">🪑</div>
                                 <div class="label">Furniture Services</div>
                             </div>
-                            <div class="mode-box room-furniture" onclick="selectMode('room-furniture')">
+                            <div class="mode-box room-furniture glass-card" onclick="selectMode('room-furniture')">
                                 <div class="icon">📋</div>
                                 <div class="label">Room Furniture List</div>
                             </div>
-                            <div class="mode-box consumer" onclick="selectMode('consumer')">
+                            <div class="mode-box consumer glass-card" onclick="selectMode('consumer')">
                                 <div class="icon">🔍</div>
                                 <div class="label">Consumer Search</div>
                             </div>
@@ -125,7 +111,7 @@
                         </h2>
                         <p>Report an electrical issue for prompt maintenance.</p>
                     </div>
-                    <form action="{{ route('complaint.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('complaint.store') }}" method="POST" enctype="multipart/form-data" onsubmit="const btn = this.querySelector('button[type=submit]'); setTimeout(() => { btn.disabled = true; btn.innerText = 'SUBMITTING...'; }, 10);">
                         @csrf
                         <div class="landscape-form-grid" style="grid-template-columns: 1fr 1fr; gap: 30px;">
                             <div class="form-group"><label>Reference S.No</label><input type="text" value="{{ $nextComplaintSno }}" disabled></div>
@@ -135,11 +121,11 @@
                             <div class="form-group"><label>Contact Phone <span style="color:red;">*</span></label><input type="text" name="phone" required placeholder="Active phone number"></div>
                             
                             <div class="form-group">
-                                <label>Building Location <span style="color:red;">*</span></label>
+                                <label>Building Name <span style="color:red;">*</span></label>
                                 <select name="building" required>
                                     <option value="" disabled selected>-- Select Building --</option>
                                     @php
-                                        $comp_buildings = config('app_data.buildings', ['Rabten Khang', 'Moenkey Khang', 'Gaden Khang', 'Dekyi Khang', 'Potala Khang', 'Tashi Khang', 'Dharamshala Khang', 'Official', 'Gadhen Khang', 'Phende Khang', 'Delek Delekyi Khang', 'Desung Leyshak', 'Phuntsok Khang', 'Songtsen Khang', 'Health Leyshak', 'Shindhey Khang', 'Thogmoen Khang', 'Sonam Khang', 'Shering Nyiwoe Khang', 'Sunney Hostel', 'Namsey Khang', 'Back of Education', 'Lemon Khang', 'Kalsang Khang', 'Phelgyal Khang', 'Pelbar Khang', 'Nangsi Leyshak', 'Namgyal Khang', 'Shiney Khang', 'Kalon Quat', 'Nelen Khang McLeod']);
+                                        $comp_buildings = config('app_data.buildings', []);
                                         $comp_buildings = array_unique($comp_buildings);
                                         sort($comp_buildings);
                                     @endphp
@@ -173,7 +159,7 @@
                         </h2>
                         <p>Apply for furniture lending or return existing items.</p>
                     </div>
-                    <form action="{{ route('furniture.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('furniture.store') }}" method="POST" enctype="multipart/form-data" onsubmit="const btn = this.querySelector('button[type=submit]'); setTimeout(() => { btn.disabled = true; btn.innerText = 'SUBMITTING...'; }, 10);">
                         @csrf
                         <div class="landscape-form-grid" style="grid-template-columns: 1fr 1fr; gap: 30px;">
                             <div class="form-group">
@@ -194,7 +180,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Personnel Name <span style="color:red;">*</span></label>
+                                <label>Personal Name <span style="color:red;">*</span></label>
                                 <input type="text" name="name" required placeholder="Full name">
                             </div>
                             
@@ -245,19 +231,9 @@
                         <p>Locate your consumer records by building and room.</p>
                     </div>
                     <form action="{{ route('consumer.search') }}" method="GET">
-                        <div class="form-group">
-                            <label>Building / Block</label>
-                            <select name="building" required>
-                                <option value="" disabled {{ !isset($search_building) ? 'selected' : '' }}>-- Select Building --</option>
-                                @php
-                                    $buildings = config('app_data.buildings', ['Rabten Khang', 'Moenkey Khang', 'Gaden Khang', 'Dekyi Khang', 'Potala Khang', 'Tashi Khang', 'Dharamshala Khang', 'Official', 'Gadhen Khang', 'Phende Khang', 'Delek Delekyi Khang', 'Desung Leyshak', 'Phuntsok Khang', 'Songtsen Khang', 'Health Leyshak', 'Shindhey Khang', 'Thogmoen Khang', 'Sonam Khang', 'Shering Nyiwoe Khang', 'Sunney Hostel', 'Namsey Khang', 'Back of Education', 'Lemon Khang', 'Kalsang Khang', 'Phelgyal Khang', 'Pelbar Khang', 'Nangsi Leyshak', 'Namgyal Khang', 'Shiney Khang', 'Kalon Quat', 'Nelen Khang McLeod']);
-                                    $buildings = array_unique($buildings);
-                                    sort($buildings);
-                                @endphp
-                                @foreach($buildings as $b)
-                                    <option value="{{ $b }}" {{ (isset($search_building) && $search_building == $b) ? 'selected' : '' }}>{{ $b }}</option>
-                                @endforeach
-                            </select>
+                        <div class="form-group" style="display:none;">
+                            <label>Building Name</label>
+                            <input type="text" name="building" value="">
                         </div>
                         <div class="form-group">
                             <label>Room No / Official Name</label>
@@ -326,7 +302,7 @@
                                         </div>
 
                                         <div>
-                                            <div style="font-size: 9px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Building</div>
+                                            <div style="font-size: 9px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Building Name</div>
                                             <div style="font-size: 0.95rem; font-weight: 700; color: #334155;">{{ $consumer['building'] ?? 'N/A' }}</div>
                                         </div>
 

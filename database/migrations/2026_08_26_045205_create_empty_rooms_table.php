@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('meter_readings', function (Blueprint $table) {
+        Schema::create('empty_rooms', function (Blueprint $table) {
             $table->id();
             $table->string('building');
             $table->string('room');
+            $table->string('bed')->nullable();
+            $table->string('table')->nullable();
+            $table->string('chair')->nullable();
+            $table->string('cupboard')->nullable();
             $table->string('name_on_bill')->nullable();
             $table->string('in_id')->nullable();
             $table->string('meter_number')->nullable();
@@ -30,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('meter_readings');
+        Schema::dropIfExists('empty_rooms');
     }
 };

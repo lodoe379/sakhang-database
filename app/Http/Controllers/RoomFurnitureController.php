@@ -76,21 +76,19 @@ class RoomFurnitureController extends Controller
 
     public function searchPublic(Request $request)
     {
-        if (!$request->has('building')) {
+        if (!$request->has('room')) {
             return redirect()->route('landing')->with('active_mode', 'room-furniture');
         }
 
-        $building = $request->building;
         $room = $request->room;
 
-        $furnitures = RoomFurniture::where('building', $building)
-            ->where('room', $room)
+        $furnitures = RoomFurniture::where('room', 'like', "%{$room}%")
             ->get();
 
         return view('landing', [
             'furnitures' => $furnitures,
             'active_mode' => 'room-furniture',
-            'search_building' => $building,
+            'search_building' => null,
             'search_room' => $room,
             'nextComplaintSno' => \App\Models\Complaint::count() + 1,
             'nextFurnitureSno' => \App\Models\FurnitureLog::count() + 1,

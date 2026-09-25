@@ -113,7 +113,7 @@
                         <input type="hidden" name="reading_id" id="reading_id">
                         
                         <div class="form-group">
-                            <label>Building</label>
+                            <label>Building Name</label>
                             <input type="text" name="building" class="form-control" required placeholder="e.g. Block A">
                         </div>
                         
