@@ -13,7 +13,7 @@ class ConsumerController extends Controller
             return redirect()->route('landing')->with('active_mode', 'consumer');
         }
 
-        $building = null;
+        $building = $request->building;
         $room = $request->room; // This is used for Room No, Name, Dept, etc.
 
         $json_path = storage_path('app/consumers.json');
@@ -23,15 +23,22 @@ class ConsumerController extends Controller
             $consumers_db = json_decode(file_get_contents($json_path), true);
             if ($consumers_db) {
                 foreach ($consumers_db as $c) {
-                    $search_lower = strtolower($room);
+                    $match_building = true;
+                    if ($building) {
+                        $match_building = isset($c['building']) && stripos($c['building'], $building) !== false;
+                    }
 
-                    // Search in name, department, building, and room
-                    $name_match = isset($c['name']) && stripos($c['name'], $room) !== false;
-                    $dept_match = isset($c['department']) && stripos($c['department'], $room) !== false;
-                    $build_match = isset($c['building']) && stripos($c['building'], $room) !== false;
-                    $r_match = isset($c['room']) && ((string) $c['room'] === (string) $room);
+                    $match_room = true;
+                    if ($room) {
+                        $name_match = isset($c['name']) && stripos($c['name'], $room) !== false;
+                        $dept_match = isset($c['department']) && stripos($c['department'], $room) !== false;
+                        $build_match = isset($c['building']) && stripos($c['building'], $room) !== false;
+                        $r_match = isset($c['room']) && ((string) $c['room'] === (string) $room);
+                        
+                        $match_room = $name_match || $dept_match || $build_match || $r_match;
+                    }
 
-                    if ($name_match || $dept_match || $build_match || $r_match) {
+                    if ($match_building && $match_room) {
                         $consumers[] = $c;
                     }
                 }

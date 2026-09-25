@@ -81,17 +81,70 @@ class RoomFurnitureController extends Controller
         }
 
         $room = $request->room;
+        $building = $request->building;
 
-        $furnitures = RoomFurniture::where('room', 'like', "%{$room}%")
-            ->get();
+        $query = RoomFurniture::query();
+        if ($building) {
+            $query->where('building', 'like', "%{$building}%");
+        }
+        if ($room) {
+            $query->where('room', 'like', "%{$room}%");
+        }
+        
+        $furnitures = $query->get();
 
         return view('landing', [
             'furnitures' => $furnitures,
             'active_mode' => 'room-furniture',
-            'search_building' => null,
+            'search_building' => $building,
             'search_room' => $room,
             'nextComplaintSno' => \App\Models\Complaint::count() + 1,
             'nextFurnitureSno' => \App\Models\FurnitureLog::count() + 1,
         ]);
+    }
+
+    public function import(Request $request)
+    {
+        if (!session('loggedin')) {
+            return redirect()->route('landing');
+        }
+
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        $file = $request->file('excel_file');
+
+        if ($xlsx = \Shuchkin\SimpleXLSX::parse($file->getPathname())) {
+            $rows = $xlsx->rows();
+            
+            if (count($rows) <= 1) {
+                return redirect()->back()->withErrors(['excel_file' => 'The uploaded file is empty or missing data.']);
+            }
+
+            $count = 0;
+            foreach ($rows as $index => $row) {
+                if ($index === 0) continue; 
+                
+                if (!isset($row[0]) || trim($row[0]) === '') continue;
+
+                $b = ucwords(strtolower(trim($row[0] ?? '')));
+                $r = trim((string)($row[1] ?? ''));
+
+                RoomFurniture::create([
+                    'building' => $b,
+                    'room' => $r,
+                    'bed' => trim((string)($row[2] ?? '')),
+                    'table' => trim((string)($row[3] ?? '')),
+                    'chair' => trim((string)($row[4] ?? '')),
+                    'cupboard' => trim((string)($row[5] ?? '')),
+                ]);
+                $count++;
+            }
+
+            return redirect()->back()->with('success', "Successfully imported {$count} furniture records!");
+        } else {
+            return redirect()->back()->withErrors(['excel_file' => 'Failed to parse the Excel file.']);
+        }
     }
 }

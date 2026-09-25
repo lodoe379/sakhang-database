@@ -58,7 +58,7 @@
                                 <div class="label">Consumer Search</div>
                             </div>
                         </div>
-                        <button type="button" onclick="resetToMinimal()" style="margin-top:40px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px; border-radius: 50px; cursor: pointer; font-weight: 700; width: 100%; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">← Back to Menu</button>
+                        <button type="button" onclick="resetToMinimal()" style="margin-top:40px; background: transparent; border: 1px solid #cbd5e1; color: #475569; padding: 15px; border-radius: 50px; cursor: pointer; font-weight: 700; width: 100%; transition: all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">← Back to Menu</button>
                     </div>
 
                     <!-- Subtle Admin Access Link inside login-section so it only shows on home page -->
@@ -231,12 +231,22 @@
                         <p>Locate your consumer records by building and room.</p>
                     </div>
                     <form action="{{ route('consumer.search') }}" method="GET">
-                        <div class="form-group" style="display:none;">
+                        <div class="form-group" id="landing-building-group">
                             <label>Building Name</label>
-                            <input type="text" name="building" value="">
+                            <input list="buildings_list_landing" name="building" placeholder="Select or type building" autocomplete="off" style="width: 100%; padding: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box;" value="{{ $search_building ?? '' }}">
+                            <datalist id="buildings_list_landing">
+                                @php
+                                    $comp_buildings = config('app_data.buildings', []);
+                                    $comp_buildings = array_unique($comp_buildings);
+                                    sort($comp_buildings);
+                                @endphp
+                                @foreach($comp_buildings as $b)
+                                    <option value="{{ $b }}">
+                                @endforeach
+                            </datalist>
                         </div>
                         <div class="form-group">
-                            <label>Room No / Official Name</label>
+                            <label id="landing-room-label">Room No / Official Name</label>
                             <input type="text" name="room" required placeholder="Enter search criteria" value="{{ $search_room ?? '' }}">
                         </div>
                         <button type="submit" class="btn btn-sign-in" style="background: #1e3a5f; color: white; border-radius: 50px; padding: 18px; font-weight: 700;">SEARCH RECORDS</button>
@@ -569,10 +579,16 @@
                     if(formTitle) formTitle.innerText = 'Search Furniture List';
                     if(formDesc) formDesc.innerText = 'Locate your room furniture list by building and room.';
                     if(searchForm) searchForm.action = '{{ route("furniture.search") }}';
+                    
+                    const rmLabel = document.getElementById('landing-room-label');
+                    if(rmLabel) rmLabel.innerText = 'Room';
                 } else {
                     if(formTitle) formTitle.innerText = 'Search Consumer ID';
                     if(formDesc) formDesc.innerText = 'Locate your consumer records by building and room.';
                     if(searchForm) searchForm.action = '{{ route("consumer.search") }}';
+                    
+                    const rmLabel = document.getElementById('landing-room-label');
+                    if(rmLabel) rmLabel.innerText = 'Room No / Official Name';
                 }
                 document.getElementById('public-consumer-form').style.display = 'block';
             } else if (mode === 'status') {

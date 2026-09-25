@@ -71,10 +71,7 @@
         <div class="dashboard-header">
             <h2 style="margin: 0; color: white; font-size: 18px; font-weight: 600; letter-spacing: -0.02em;">{{ str_starts_with(session('role'), 'staff') ? 'Staff Dashboard' : 'Admin Dashboard' }}</h2>
             <div style="display: flex; gap: 10px; align-items: center;">
-                <button onclick="window.location.href='{{ route('room.data') }}'" class="btn"
-                    style="width: auto; padding: 6px 16px; font-size: 12px; background: #6366f1; border: none; color: white; font-weight: 600; transition: all 0.2s; border-radius: 8px;">
-                    🏢 Master Room Data
-                </button>
+
                 <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                     @csrf
                     <button type="submit" class="btn"

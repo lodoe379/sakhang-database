@@ -77,4 +77,5 @@ Route::group([], function () {
     Route::post('/furniture-editor', [RoomFurnitureController::class, 'store'])->name('furniture.editor.store');
     Route::post('/furniture-editor/update/{id}', [RoomFurnitureController::class, 'update'])->name('furniture.editor.update');
     Route::post('/furniture-editor/delete/{id}', [RoomFurnitureController::class, 'destroy'])->name('furniture.editor.destroy');
+    Route::post('/furniture-editor/import', [RoomFurnitureController::class, 'import'])->name('furniture.editor.import');
 });
