@@ -192,7 +192,7 @@
                     </div>
                     
                     <div class="table-wrapper">
-                        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; color: #1e293b;">
                             <thead>
                                 <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
                                     <th style="padding: 12px 10px; color: #475569;">Building Name</th>

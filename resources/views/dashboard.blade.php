@@ -121,7 +121,7 @@
                     class="glass-card animate-fade-in"
                     style="background: linear-gradient(135deg, #8b5cf6 0%, #4c1d95 100%); padding: 25px; color: white; cursor: pointer; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; justify-content: space-between;">
                     <div style="font-size: 16px; opacity: 0.9; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
-                        <span>🏢</span> EMPTY ROOM
+                        <span>🏢</span> EMPTY ROOMS SEARCH
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr; gap: 10px; align-items: end;">
                         <div style="text-align: left;">
@@ -274,6 +274,8 @@
                                             <a href="{{ asset('storage/' . $room['meter_image']) }}" target="_blank">
                                                 <img src="{{ asset('storage/' . $room['meter_image']) }}" alt="Meter Image" style="max-width: 50px; max-height: 50px; border-radius: 4px;">
                                             </a>
+                                        @else
+                                            <span style="color: #94a3b8; font-size: 12px; font-style: italic;">No Image</span>
                                         @endif
                                     </td>
                                     <td style="display: flex; gap: 8px;">
@@ -377,12 +379,26 @@
                     <select id="modal-building-select" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; box-sizing: border-box;">
                         <option value="">-- Select Building --</option>
                         @php
-                            $comp_buildings = config('app_data.buildings', []);
-                            $comp_buildings = array_unique($comp_buildings);
-                            sort($comp_buildings);
+                            $b1 = config('app_data.buildings', []);
+                            $b2 = \App\Models\MeterReading::distinct()->pluck('building')->toArray();
+                            $b3 = \App\Models\RoomFurniture::distinct()->pluck('building')->toArray();
+                            
+                            $raw_buildings = array_filter(array_merge($b1, $b2, $b3));
+                            $comp_buildings = [];
+                            $seen = [];
+                            foreach ($raw_buildings as $b) {
+                                $lower = strtolower(trim($b));
+                                if (!isset($seen[$lower])) {
+                                    $seen[$lower] = true;
+                                    $comp_buildings[] = trim($b);
+                                }
+                            }
+                            sort($comp_buildings, SORT_NATURAL | SORT_FLAG_CASE);
                         @endphp
                         @foreach($comp_buildings as $b)
-                            <option value="{{ $b }}">{{ $b }}</option>
+                            @if(!empty(trim($b)))
+                                <option value="{{ $b }}">{{ $b }}</option>
+                            @endif
                         @endforeach
                     </select>
                 </div>
@@ -587,6 +603,12 @@
                     const meter_number = data.meter_number || '';
                     const consumer_id = data.consumer_id || '';
                     const account_no = data.account_no || '';
+                    const meter_image = data.meter_image || '';
+                    
+                    const storageBaseUrl = "{{ asset('storage') }}";
+                    const imageHtml = meter_image ? 
+                        `<a href="${storageBaseUrl}/${meter_image}" target="_blank"><img src="${storageBaseUrl}/${meter_image}" alt="Meter Image" style="max-width: 50px; max-height: 50px; border-radius: 4px;"></a>` : 
+                        '';
 
                     const html = `
                         <tr class="complaint-row animate-fade-in" style="border-bottom: 1px solid #f1f5f9; background-color: #f0fdf4;">
@@ -601,7 +623,7 @@
                             <td><input type="text" data-field="meter_number" value="${meter_number}" onchange="updateDynamicRoom('${newRowId}', 'meter_number', this.value)" style="width: 100%; min-width: 80px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px; background: white; color: #0f172a; font-weight: 600;"></td>
                             <td><input type="text" data-field="consumer_id" value="${consumer_id}" onchange="updateDynamicRoom('${newRowId}', 'consumer_id', this.value)" style="width: 100%; min-width: 80px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px; background: white; color: #0f172a; font-weight: 600;"></td>
                             <td><input type="text" data-field="account_no" value="${account_no}" onchange="updateDynamicRoom('${newRowId}', 'account_no', this.value)" style="width: 100%; min-width: 80px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px; background: white; color: #0f172a; font-weight: 600;"></td>
-                            <td></td>
+                            <td>${imageHtml || '<span style="color: #94a3b8; font-size: 12px; font-style: italic;">No Image</span>'}</td>
                             <td style="display: flex; gap: 8px;">
                                 <button onclick="saveRoomRowData(this, '${building.replace(/'/g, "\\'")}', '${room.replace(/'/g, "\\'")}')" style="color: #10b981; border: none; background: transparent; cursor: pointer; font-size: 16px;" title="Save Room">💾</button>
                                 <button onclick="deleteRoomData(this, '${building.replace(/'/g, "\\'")}', '${room.replace(/'/g, "\\'")}')" style="color: #ef4444; border: none; background: transparent; cursor: pointer; font-size: 16px;" title="Delete Room">🗑️</button>

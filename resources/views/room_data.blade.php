@@ -154,22 +154,24 @@
                             <tbody>
                                 @foreach($roomData as $room)
                                     <tr class="complaint-row" style="border-bottom: 1px solid #f1f5f9;">
-                                        <td style="font-weight: 600; color: #0f172a;">{{ $room['building'] }}</td>
-                                        <td style="font-weight: 600; color: #0f172a;">{{ $room['room'] }}</td>
-                                        <td><input type="text" data-field="bed" value="{{ $room['bed'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'bed', this.value)" style="width: 100%; min-width: 50px; border: none; background: transparent; padding: 4px; color: #0f172a; font-weight: 600;"></td>
-                                        <td><input type="text" data-field="table" value="{{ $room['table'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'table', this.value)" style="width: 100%; min-width: 50px; border: none; background: transparent; padding: 4px; color: #0f172a; font-weight: 600;"></td>
-                                        <td><input type="text" data-field="chair" value="{{ $room['chair'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'chair', this.value)" style="width: 100%; min-width: 50px; border: none; background: transparent; padding: 4px; color: #0f172a; font-weight: 600;"></td>
-                                        <td><input type="text" data-field="cupboard" value="{{ $room['cupboard'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'cupboard', this.value)" style="width: 100%; min-width: 50px; border: none; background: transparent; padding: 4px; color: #0f172a; font-weight: 600;"></td>
-                                        <td><input type="text" data-field="name_on_bill" value="{{ $room['name_on_bill'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'name_on_bill', this.value)" style="width: 100%; min-width: 100px; border: none; background: transparent; padding: 4px; color: #0f172a; font-weight: 600;"></td>
-                                        <td><input type="text" data-field="in_id" value="{{ $room['in_id'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'in_id', this.value)" style="width: 100%; min-width: 80px; border: none; background: transparent; padding: 4px; color: #0f172a; font-weight: 600;"></td>
-                                        <td><input type="text" data-field="meter_number" value="{{ $room['meter_number'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'meter_number', this.value)" style="width: 100%; min-width: 80px; border: none; background: transparent; padding: 4px; color: #0f172a; font-weight: 600;"></td>
-                                        <td><input type="text" data-field="consumer_id" value="{{ $room['consumer_id'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'consumer_id', this.value)" style="width: 100%; min-width: 80px; border: none; background: transparent; padding: 4px; color: #0f172a; font-weight: 600;"></td>
-                                        <td><input type="text" data-field="account_no" value="{{ $room['account_no'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'account_no', this.value)" style="width: 100%; min-width: 80px; border: none; background: transparent; padding: 4px; color: #0f172a; font-weight: 600;"></td>
+                                        <td style="font-weight: 600; color: #1e293b;">{{ $room['building'] }}</td>
+                                        <td style="font-weight: 600; color: #1e293b;">{{ $room['room'] }}</td>
+                                        <td><input type="text" data-field="bed" value="{{ $room['bed'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'bed', this.value)" style="width: 100%; min-width: 50px; border: none; background: transparent; padding: 4px; color: #1e293b; font-weight: 600;"></td>
+                                        <td><input type="text" data-field="table" value="{{ $room['table'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'table', this.value)" style="width: 100%; min-width: 50px; border: none; background: transparent; padding: 4px; color: #1e293b; font-weight: 600;"></td>
+                                        <td><input type="text" data-field="chair" value="{{ $room['chair'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'chair', this.value)" style="width: 100%; min-width: 50px; border: none; background: transparent; padding: 4px; color: #1e293b; font-weight: 600;"></td>
+                                        <td><input type="text" data-field="cupboard" value="{{ $room['cupboard'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'cupboard', this.value)" style="width: 100%; min-width: 50px; border: none; background: transparent; padding: 4px; color: #1e293b; font-weight: 600;"></td>
+                                        <td><input type="text" data-field="name_on_bill" value="{{ $room['name_on_bill'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'name_on_bill', this.value)" style="width: 100%; min-width: 100px; border: none; background: transparent; padding: 4px; color: #1e293b; font-weight: 600;"></td>
+                                        <td><input type="text" data-field="in_id" value="{{ $room['in_id'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'in_id', this.value)" style="width: 100%; min-width: 80px; border: none; background: transparent; padding: 4px; color: #1e293b; font-weight: 600;"></td>
+                                        <td><input type="text" data-field="meter_number" value="{{ $room['meter_number'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'meter_number', this.value)" style="width: 100%; min-width: 80px; border: none; background: transparent; padding: 4px; color: #1e293b; font-weight: 600;"></td>
+                                        <td><input type="text" data-field="consumer_id" value="{{ $room['consumer_id'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'consumer_id', this.value)" style="width: 100%; min-width: 80px; border: none; background: transparent; padding: 4px; color: #1e293b; font-weight: 600;"></td>
+                                        <td><input type="text" data-field="account_no" value="{{ $room['account_no'] }}" onchange="updateRoomData('{{ $room['building'] }}', '{{ $room['room'] }}', 'account_no', this.value)" style="width: 100%; min-width: 80px; border: none; background: transparent; padding: 4px; color: #1e293b; font-weight: 600;"></td>
                                         <td>
                                             @if($room['meter_image'])
                                                 <a href="{{ asset('storage/' . $room['meter_image']) }}" target="_blank">
                                                     <img src="{{ asset('storage/' . $room['meter_image']) }}" alt="Meter Image" style="max-width: 50px; max-height: 50px; border-radius: 4px;">
                                                 </a>
+                                            @else
+                                                <span style="color: #94a3b8; font-size: 12px; font-style: italic;">No Image</span>
                                             @endif
                                         </td>
                                         <td style="display: flex; gap: 8px;">
@@ -201,12 +203,26 @@
                     <select id="modal-building-select" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; box-sizing: border-box;">
                         <option value="">-- Select Building --</option>
                         @php
-                            $comp_buildings = config('app_data.buildings', []);
-                            $comp_buildings = array_unique($comp_buildings);
-                            sort($comp_buildings);
+                            $b1 = config('app_data.buildings', []);
+                            $b2 = \App\Models\MeterReading::distinct()->pluck('building')->toArray();
+                            $b3 = \App\Models\RoomFurniture::distinct()->pluck('building')->toArray();
+                            
+                            $raw_buildings = array_filter(array_merge($b1, $b2, $b3));
+                            $comp_buildings = [];
+                            $seen = [];
+                            foreach ($raw_buildings as $b) {
+                                $lower = strtolower(trim($b));
+                                if (!isset($seen[$lower])) {
+                                    $seen[$lower] = true;
+                                    $comp_buildings[] = trim($b);
+                                }
+                            }
+                            sort($comp_buildings, SORT_NATURAL | SORT_FLAG_CASE);
                         @endphp
                         @foreach($comp_buildings as $b)
-                            <option value="{{ $b }}">{{ $b }}</option>
+                            @if(!empty(trim($b)))
+                                <option value="{{ $b }}">{{ $b }}</option>
+                            @endif
                         @endforeach
                     </select>
                 </div>
@@ -338,6 +354,12 @@
                     const meter_number = data.meter_number || '';
                     const consumer_id = data.consumer_id || '';
                     const account_no = data.account_no || '';
+                    const meter_image = data.meter_image || '';
+                    
+                    const storageBaseUrl = "{{ asset('storage') }}";
+                    const imageHtml = meter_image ? 
+                        `<a href="${storageBaseUrl}/${meter_image}" target="_blank"><img src="${storageBaseUrl}/${meter_image}" alt="Meter Image" style="max-width: 50px; max-height: 50px; border-radius: 4px;"></a>` : 
+                        '';
 
                     const html = `
                         <tr class="complaint-row animate-fade-in" style="border-bottom: 1px solid #f1f5f9; background-color: #f0fdf4;">
@@ -352,7 +374,7 @@
                             <td><input type="text" data-field="meter_number" value="${meter_number}" onchange="updateDynamicRoom('${newRowId}', 'meter_number', this.value)" style="width: 100%; min-width: 80px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px; background: white; color: #0f172a; font-weight: 600;"></td>
                             <td><input type="text" data-field="consumer_id" value="${consumer_id}" onchange="updateDynamicRoom('${newRowId}', 'consumer_id', this.value)" style="width: 100%; min-width: 80px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px; background: white; color: #0f172a; font-weight: 600;"></td>
                             <td><input type="text" data-field="account_no" value="${account_no}" onchange="updateDynamicRoom('${newRowId}', 'account_no', this.value)" style="width: 100%; min-width: 80px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px; background: white; color: #0f172a; font-weight: 600;"></td>
-                            <td></td>
+                            <td>${imageHtml || '<span style="color: #94a3b8; font-size: 12px; font-style: italic;">No Image</span>'}</td>
                             <td style="display: flex; gap: 8px;">
                                 <button onclick="saveRoomRowData(this, '${building.replace(/'/g, "\\'")}', '${room.replace(/'/g, "\\'")}')" style="color: #10b981; border: none; background: transparent; cursor: pointer; font-size: 16px;" title="Save Room">💾</button>
                                 <button onclick="deleteRoomData(this, '${building.replace(/'/g, "\\'")}', '${room.replace(/'/g, "\\'")}')" style="color: #ef4444; border: none; background: transparent; cursor: pointer; font-size: 16px;" title="Delete Room">🗑️</button>

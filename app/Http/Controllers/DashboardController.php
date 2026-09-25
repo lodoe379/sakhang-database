@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Complaint;
 use App\Models\FurnitureLog;
+use App\Models\RoomFurniture;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -20,29 +21,59 @@ class DashboardController extends Controller
 
         $complaints = Complaint::latest()->get();
 
-        $emptyRooms = \App\Models\EmptyRoom::all();
-        $roomData = [];
-        foreach($emptyRooms as $r) {
-            $roomData[] = [
-                'building' => $r->building,
-                'room' => $r->room,
-                'bed' => $r->bed,
-                'table' => $r->table,
-                'chair' => $r->chair,
-                'cupboard' => $r->cupboard,
-                'name_on_bill' => $r->name_on_bill,
-                'in_id' => $r->in_id,
-                'meter_number' => $r->meter_number,
-                'consumer_id' => $r->consumer_id,
-                'account_no' => $r->account_no,
-                'meter_image' => $r->meter_image,
+        $meters = \App\Models\MeterReading::all();
+        $furnitures = \App\Models\RoomFurniture::all();
+        
+        $roomsMap = [];
+        
+        foreach($meters as $m) {
+            $key = strtolower(trim($m->building)) . '|||' . strtolower(trim($m->room));
+            $roomsMap[$key] = [
+                'building' => trim($m->building),
+                'room' => trim($m->room),
+                'bed' => '',
+                'table' => '',
+                'chair' => '',
+                'cupboard' => '',
+                'name_on_bill' => $m->name_on_bill,
+                'in_id' => $m->in_id,
+                'meter_number' => $m->meter_number,
+                'consumer_id' => $m->consumer_id,
+                'account_no' => $m->account_no,
+                'meter_image' => $m->meter_image,
             ];
         }
+
+        foreach($furnitures as $f) {
+            $key = strtolower(trim($f->building)) . '|||' . strtolower(trim($f->room));
+            if (!isset($roomsMap[$key])) {
+                $roomsMap[$key] = [
+                    'building' => trim($f->building),
+                    'room' => trim($f->room),
+                    'bed' => '',
+                    'table' => '',
+                    'chair' => '',
+                    'cupboard' => '',
+                    'name_on_bill' => '',
+                    'in_id' => '',
+                    'meter_number' => '',
+                    'consumer_id' => '',
+                    'account_no' => '',
+                    'meter_image' => '',
+                ];
+            }
+            $roomsMap[$key]['bed'] = $f->bed;
+            $roomsMap[$key]['table'] = $f->table;
+            $roomsMap[$key]['chair'] = $f->chair;
+            $roomsMap[$key]['cupboard'] = $f->cupboard;
+        }
+
+        $roomData = array_values($roomsMap);
 
         // Filter for ONLY empty rooms (rooms with no name_on_bill)
         $emptyRoomData = [];
         foreach ($roomData as $key => $room) {
-            if (empty($room['name_on_bill'])) {
+            if (empty(trim($room['name_on_bill']))) {
                 $emptyRoomData[] = $room;
             }
         }
@@ -148,16 +179,35 @@ class DashboardController extends Controller
         $field = $request->input('field');
         $value = $request->input('value');
 
-        $er = \App\Models\EmptyRoom::where('building', $building)->where('room', $room)->first();
-        if ($er) {
-            $er->$field = $value;
-            $er->save();
-        } else {
-            \App\Models\EmptyRoom::create([
-                'building' => $building,
-                'room' => $room,
-                $field => $value
-            ]);
+        $furnitureFields = ['bed', 'table', 'chair', 'cupboard'];
+        $meterFields = ['name_on_bill', 'in_id', 'meter_number', 'consumer_id', 'account_no'];
+
+        if (in_array($field, $furnitureFields)) {
+            $rf = \App\Models\RoomFurniture::whereRaw('LOWER(building) = ?', [strtolower($building)])
+                                           ->whereRaw('LOWER(room) = ?', [strtolower($room)])->first();
+            if ($rf) {
+                $rf->$field = $value;
+                $rf->save();
+            } else {
+                \App\Models\RoomFurniture::create([
+                    'building' => $building,
+                    'room' => $room,
+                    $field => $value
+                ]);
+            }
+        } elseif (in_array($field, $meterFields)) {
+            $mr = \App\Models\MeterReading::whereRaw('LOWER(building) = ?', [strtolower($building)])
+                                          ->whereRaw('LOWER(room) = ?', [strtolower($room)])->first();
+            if ($mr) {
+                $mr->$field = $value;
+                $mr->save();
+            } else {
+                \App\Models\MeterReading::create([
+                    'building' => $building,
+                    'room' => $room,
+                    $field => $value
+                ]);
+            }
         }
 
         return response()->json(['success' => true]);
@@ -176,25 +226,32 @@ class DashboardController extends Controller
             return response()->json(['error' => 'Building and Room are required'], 400);
         }
 
-        $er = \App\Models\EmptyRoom::where('building', $building)->where('room', $room)->first();
-        if (!$er) {
-            $er = new \App\Models\EmptyRoom();
-            $er->building = $building;
-            $er->room = $room;
+        $rf = \App\Models\RoomFurniture::whereRaw('LOWER(building) = ?', [strtolower($building)])
+                                       ->whereRaw('LOWER(room) = ?', [strtolower($room)])->first();
+        if (!$rf) {
+            $rf = new \App\Models\RoomFurniture();
+            $rf->building = $building;
+            $rf->room = $room;
         }
-        
-        // Update all fields
-        $er->bed = $request->input('bed', '');
-        $er->table = $request->input('table', '');
-        $er->chair = $request->input('chair', '');
-        $er->cupboard = $request->input('cupboard', '');
-        $er->name_on_bill = $request->input('name_on_bill', '');
-        $er->in_id = $request->input('in_id', '');
-        $er->meter_number = $request->input('meter_number', '');
-        $er->consumer_id = $request->input('consumer_id', '');
-        $er->account_no = $request->input('account_no', '');
-        
-        $er->save();
+        $rf->bed = $request->input('bed', '');
+        $rf->table = $request->input('table', '');
+        $rf->chair = $request->input('chair', '');
+        $rf->cupboard = $request->input('cupboard', '');
+        $rf->save();
+
+        $mr = \App\Models\MeterReading::whereRaw('LOWER(building) = ?', [strtolower($building)])
+                                      ->whereRaw('LOWER(room) = ?', [strtolower($room)])->first();
+        if (!$mr) {
+            $mr = new \App\Models\MeterReading();
+            $mr->building = $building;
+            $mr->room = $room;
+        }
+        $mr->name_on_bill = $request->input('name_on_bill', '');
+        $mr->in_id = $request->input('in_id', '');
+        $mr->meter_number = $request->input('meter_number', '');
+        $mr->consumer_id = $request->input('consumer_id', '');
+        $mr->account_no = $request->input('account_no', '');
+        $mr->save();
 
         return response()->json(['success' => true]);
     }
@@ -212,7 +269,10 @@ class DashboardController extends Controller
             return response()->json(['error' => 'Building and Room are required'], 400);
         }
 
-        \App\Models\EmptyRoom::where('building', $building)->where('room', $room)->delete();
+        \App\Models\RoomFurniture::whereRaw('LOWER(building) = ?', [strtolower($building)])
+                                 ->whereRaw('LOWER(room) = ?', [strtolower($room)])->delete();
+        \App\Models\MeterReading::whereRaw('LOWER(building) = ?', [strtolower($building)])
+                                ->whereRaw('LOWER(room) = ?', [strtolower($room)])->delete();
 
         return response()->json(['success' => true]);
     }
@@ -230,34 +290,29 @@ class DashboardController extends Controller
             return response()->json(['error' => 'Building and Room are required'], 400);
         }
 
-        // Fetch from EmptyRoom first
-        $er = \App\Models\EmptyRoom::where('building', $building)
-            ->where('room', $room)
+        // Fetch from RoomFurniture
+        $rf = \App\Models\RoomFurniture::whereRaw('LOWER(building) = ?', [strtolower($building)])
+            ->whereRaw('LOWER(room) = ?', [strtolower($room)])
             ->first();
 
-        // Fetch from RoomFurniture as fallback
-        $rf = \App\Models\RoomFurniture::where('building', $building)
-            ->where('room', $room)
-            ->first();
-
-        // Fetch from MeterReading as fallback
-        $mr = \App\Models\MeterReading::where('building', $building)
-            ->where('room', $room)
+        // Fetch from MeterReading
+        $mr = \App\Models\MeterReading::whereRaw('LOWER(building) = ?', [strtolower($building)])
+            ->whereRaw('LOWER(room) = ?', [strtolower($room)])
             ->first();
 
         $data = [
             'building' => $building,
             'room' => $room,
-            'bed' => $er ? $er->bed : ($rf ? $rf->bed : ''),
-            'table' => $er ? $er->table : ($rf ? $rf->table : ''),
-            'chair' => $er ? $er->chair : ($rf ? $rf->chair : ''),
-            'cupboard' => $er ? $er->cupboard : ($rf ? $rf->cupboard : ''),
-            'name_on_bill' => $er ? $er->name_on_bill : ($mr ? $mr->name_on_bill : ''),
-            'in_id' => $er ? $er->in_id : ($mr ? $mr->in_id : ''),
-            'meter_number' => $er ? $er->meter_number : ($mr ? $mr->meter_number : ''),
-            'consumer_id' => $er ? $er->consumer_id : ($mr ? $mr->consumer_id : ''),
-            'account_no' => $er ? $er->account_no : ($mr ? $mr->account_no : ''),
-            'meter_image' => $er ? $er->meter_image : ($mr ? $mr->meter_image : '')
+            'bed' => $rf ? $rf->bed : '',
+            'table' => $rf ? $rf->table : '',
+            'chair' => $rf ? $rf->chair : '',
+            'cupboard' => $rf ? $rf->cupboard : '',
+            'name_on_bill' => $mr ? $mr->name_on_bill : '',
+            'in_id' => $mr ? $mr->in_id : '',
+            'meter_number' => $mr ? $mr->meter_number : '',
+            'consumer_id' => $mr ? $mr->consumer_id : '',
+            'account_no' => $mr ? $mr->account_no : '',
+            'meter_image' => $mr ? $mr->meter_image : ''
         ];
 
         return response()->json($data);
