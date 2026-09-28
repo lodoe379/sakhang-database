@@ -68,7 +68,7 @@ class RoomDataController extends Controller
         // Filter for empty rooms (where name_on_bill is empty)
         $emptyRoomData = [];
         foreach ($roomData as $room) {
-            if (empty(trim($room['name_on_bill']))) {
+            if (empty(trim($room['name_on_bill'] ?? ''))) {
                 $emptyRoomData[] = $room;
             }
         }

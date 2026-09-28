@@ -73,7 +73,7 @@ class DashboardController extends Controller
         // Filter for ONLY empty rooms (rooms with no name_on_bill)
         $emptyRoomData = [];
         foreach ($roomData as $key => $room) {
-            if (empty(trim($room['name_on_bill']))) {
+            if (empty(trim($room['name_on_bill'] ?? ''))) {
                 $emptyRoomData[] = $room;
             }
         }
@@ -210,6 +210,19 @@ class DashboardController extends Controller
             }
         }
 
+        $er = \App\Models\EmptyRoom::whereRaw('LOWER(building) = ?', [strtolower($building)])
+                                      ->whereRaw('LOWER(room) = ?', [strtolower($room)])->first();
+        if ($er) {
+            $er->$field = $value;
+            $er->save();
+        } else {
+            \App\Models\EmptyRoom::create([
+                'building' => $building,
+                'room' => $room,
+                $field => $value
+            ]);
+        }
+
         return response()->json(['success' => true]);
     }
 
@@ -253,6 +266,35 @@ class DashboardController extends Controller
         $mr->account_no = $request->input('account_no', '');
         $mr->save();
 
+        $er = \App\Models\EmptyRoom::whereRaw('LOWER(building) = ?', [strtolower($building)])
+                                      ->whereRaw('LOWER(room) = ?', [strtolower($room)])->first();
+        if (!$er) {
+            $er = new \App\Models\EmptyRoom();
+            $er->building = $building;
+            $er->room = $room;
+        }
+        $er->bed = $request->input('bed', '');
+        $er->table = $request->input('table', '');
+        $er->chair = $request->input('chair', '');
+        $er->cupboard = $request->input('cupboard', '');
+        $er->name_on_bill = $request->input('name_on_bill', '');
+        $er->in_id = $request->input('in_id', '');
+        $er->meter_number = $request->input('meter_number', '');
+        $er->consumer_id = $request->input('consumer_id', '');
+        $er->account_no = $request->input('account_no', '');
+        $er->save();
+
+        $nameForMeter = $request->input('name_on_bill', '');
+        $meterNo = $request->input('meter_number', '');
+        
+        if (!empty($nameForMeter) || !empty($meterNo)) {
+            try {
+                \Illuminate\Support\Facades\DB::insert('INSERT INTO meter_data (name, meter_no) VALUES (?, ?)', [$nameForMeter, $meterNo]);
+            } catch (\Exception $e) {
+                // Ignore errors
+            }
+        }
+
         return response()->json(['success' => true]);
     }
 
@@ -273,6 +315,8 @@ class DashboardController extends Controller
                                  ->whereRaw('LOWER(room) = ?', [strtolower($room)])->delete();
         \App\Models\MeterReading::whereRaw('LOWER(building) = ?', [strtolower($building)])
                                 ->whereRaw('LOWER(room) = ?', [strtolower($room)])->delete();
+        \App\Models\EmptyRoom::whereRaw('LOWER(building) = ?', [strtolower($building)])
+                             ->whereRaw('LOWER(room) = ?', [strtolower($room)])->delete();
 
         return response()->json(['success' => true]);
     }

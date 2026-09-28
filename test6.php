@@ -1,8 +1,9 @@
 <?php
-try {
-    $p = new PDO('sqlite:C:\Users\Tenzin Lodoe\Downloads\Sakhang-Database\database\database.sqlite');
-    $st = $p->query("SELECT * FROM electrical_complaints");
-    print_r($st ? $st->fetchAll(PDO::FETCH_ASSOC) : "Error or Empty\n");
-} catch (Exception $e) {
-    echo $e->getMessage() . "\n";
-}
+require 'vendor/autoload.php';
+$app = require_once 'bootstrap/app.php';
+$app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
+$request = new \Illuminate\Http\Request();
+$request->merge(['building' => 'Ganden Khang (Chitue)', 'room' => '2']);
+$controller = new \App\Http\Controllers\DashboardController();
+$response = $controller->searchRoomData($request);
+echo $response->content();

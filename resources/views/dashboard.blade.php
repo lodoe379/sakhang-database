@@ -679,7 +679,7 @@
             .then(data => {
                 if (data.success) {
                     btnElement.innerHTML = '✅';
-                    setTimeout(() => { btnElement.innerHTML = originalHtml; btnElement.disabled = false; }, 2000);
+                    btnElement.disabled = false;
                 } else {
                     alert('Failed to save room row.');
                     btnElement.innerHTML = originalHtml;
