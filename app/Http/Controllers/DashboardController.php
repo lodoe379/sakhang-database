@@ -289,7 +289,10 @@ class DashboardController extends Controller
         
         if (!empty($nameForMeter) || !empty($meterNo)) {
             try {
-                \Illuminate\Support\Facades\DB::insert('INSERT INTO meter_data (name, meter_no) VALUES (?, ?)', [$nameForMeter, $meterNo]);
+                \App\Models\MeterData::updateOrCreate(
+                    ['meter_no' => $meterNo],
+                    ['name' => $nameForMeter]
+                );
             } catch (\Exception $e) {
                 // Ignore errors
             }
